@@ -1,6 +1,6 @@
 - git:
     uri: git@git.sim.informatik.tu-darmstadt.de:kohlbrecher/thor_op_gazebo.git
-    local-name: src/thor_op_gazebo
+    local-name: src/thor_mang/thor_mang_gazebo
 - git:
     uri: git@git.sim.informatik.tu-darmstadt.de:kohlbrecher/thor_op_common.git
-    local-name: src/thor_op_common
+    local-name: src/thor_mang/thor_mang_common
