@@ -116,6 +116,41 @@
         goal: *goal_pos_constraint
     
     stop_trajectory_duration: 1.0
+    
+  head_traj_controller:
+    type: "effort_controllers/JointTrajectoryController"
+    joints:
+      - head_pan
+      - head_tilt
+      
+    gains: # Required because we're controlling an effort interface
+      head_pan: {p: *kp_default_arms,  d: 0, i: *ki_default, i_clamp: *ki__clamp_default}
+      head_tilt: {p: *kp_default_arms,  d: 0, i: *ki_default, i_clamp: *ki__clamp_default}
+
+    constraints:
+      goal_time: *goal_time_constraint
+      head_pan:
+        goal: *goal_pos_constraint
+      head_tilt:
+        goal: *goal_pos_constraint
+    
+    stop_trajectory_duration: 1.0 
+    
+    
+  waist_lidar_controller:
+    type: "effort_controllers/JointTrajectoryController"
+    joints:
+      - waist_lidar
+      
+    gains: # Required because we're controlling an effort interface
+      waist_lidar: {p: *kp_default_arms,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
+
+    constraints:
+      goal_time: *goal_time_constraint
+      waist_lidar:
+        goal: *goal_pos_constraint
+        
+    stop_trajectory_duration: 1.0      
       
       
   left_leg_traj_controller:
