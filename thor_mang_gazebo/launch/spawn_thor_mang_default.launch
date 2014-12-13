@@ -17,6 +17,6 @@
   <!-- start robot state publisher -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen" >
     <param name="publish_frequency" type="double" value="50.0" />
-    <remap from="joint_states" to="/thor/joint_states" />
+    <remap from="joint_states" to="/thor_mang/joint_states" />
   </node>
 </launch>
