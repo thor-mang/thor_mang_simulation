@@ -16,9 +16,9 @@
       - l_wrist_yaw2
       
     gains: # Required because we're controlling an effort interface
-      l_shoulder_pitch: {p: &kp_shoulder_pitch 150,  d: &kd_shoulder_pitch 0.01, i: &ki_default 0, i_clamp: &ki__clamp_default 0}
-      l_shoulder_roll: {p: &kp_shoulder_roll 80,  d: &kd_shoulder_roll 0.01, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_shoulder_yaw: {p: &kp_default_arms 20,  d: &kd_default_arms 0.01, i: *ki_default, i_clamp: *ki__clamp_default}
+      l_shoulder_pitch: {p: &kp_shoulder_pitch 300,  d: &kd_shoulder_pitch 0.01, i: &ki_default 0, i_clamp: &ki__clamp_default 0}
+      l_shoulder_roll: {p: &kp_shoulder_roll 300,  d: &kd_shoulder_roll 0.01, i: *ki_default, i_clamp: *ki__clamp_default}
+      l_shoulder_yaw: {p: &kp_default_arms 50,  d: &kd_default_arms 0.01, i: *ki_default, i_clamp: *ki__clamp_default}
       l_elbow: {p: &kp_elbow 50,  d: &kd_elbow 0.01, i: *ki_default, i_clamp: *ki__clamp_default}
       l_wrist_yaw1: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
       l_wrist_roll: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
@@ -105,8 +105,8 @@
       - waist_tilt
       
     gains: # Required because we're controlling an effort interface
-      waist_pan: {p: &kp_default 200,  d: &kd_default 0.5, i: *ki_default, i_clamp: *ki__clamp_default}
-      waist_tilt: {p: 400,  d: 10, i: *ki_default, i_clamp: *ki__clamp_default}     
+      waist_pan: {p: &kp_default 2000,  d: &kd_default 0.5, i: *ki_default, i_clamp: *ki__clamp_default}
+      waist_tilt: {p: 2000,  d: 10, i: *ki_default, i_clamp: *ki__clamp_default}     
 
     constraints:
       goal_time: *goal_time_constraint
