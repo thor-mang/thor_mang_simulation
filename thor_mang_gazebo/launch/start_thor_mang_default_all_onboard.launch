@@ -3,7 +3,6 @@
 <launch>
   <include file="$(find thor_mang_gazebo)/launch/start_thor_mang_default_with_controllers.launch"/>
   
-  <include file="$(find thor_mang_launch)/launch/hector_slam.launch"/>
-  <include file="$(find thor_mang_launch)/launch/state_estimation.launch"/>
+  <include file="$(find thor_mang_launch)/launch/onboard.launch"/>
   
 </launch>
