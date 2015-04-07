@@ -19,6 +19,6 @@
 
   <include file="$(find thor_mang_gazebo)/launch/spawn_thor_mang_default.launch"/>
   
-  <include file="$(find thor_mang_gazebo_ros_control)/launch/default_controllers.launch"/>
+  <include file="$(find thor_mang_gazebo_ros_control)/launch/$(optenv THOR_ROBOT_TYPE thor_mang)_default_controllers.launch"/>
   
 </launch>

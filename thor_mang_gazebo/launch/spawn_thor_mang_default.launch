@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
+  <!-- Set use of simulation time to true -->
   <param name="use_sim_time" value="true" />
 
   <!-- send the robot XML to param server -->
