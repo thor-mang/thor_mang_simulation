@@ -3,7 +3,7 @@
 <launch>
   <include file="$(find thor_mang_gazebo)/launch/start_thor_mang_default_with_controllers.launch"/>
   
-  <include file="$(find thor_mang_onboard_launch)/launch/onboard.launch"/>
+  <include file="$(find thor_mang_onboard_launch)/launch/thor_computers/perception.launch"/>
   
   <include file="$(find thor_mang_onboard_launch)/launch/no_comms_bridge/head_camera_relay.launch"/>
   
