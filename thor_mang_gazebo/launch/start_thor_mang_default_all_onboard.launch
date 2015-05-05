@@ -5,4 +5,6 @@
   
   <include file="$(find thor_mang_onboard_launch)/launch/onboard.launch"/>
   
+  <include file="$(find thor_mang_onboard_launch)/launch/no_comms_bridge/head_camera_relay.launch"/>
+  
 </launch>
