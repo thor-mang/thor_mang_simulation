@@ -21,6 +21,8 @@
   
   <include file="$(find thor_mang_gazebo_ros_control)/launch/$(optenv THOR_ROBOT_TYPE thor_mang)_default_controllers.launch"/>
 
+  <include file="$(find thor_mang_control_mode_switcher)/launch/control_mode_switcher.launch"/>
+
   <include file="$(find vigir_be_launch)/launch/behavior_onboard_thor.launch"/>
   
 </launch>
