@@ -22,8 +22,8 @@
     </node>-->
   </group>
 
-  <include  file = "$(find thor_mang_gazebo_ros_control)/launch/hands/$(optenv THOR_RIGHT_HAND_TYPE r_stump)_controllers.launch" />
-  <include  file = "$(find thor_mang_gazebo_ros_control)/launch/hands/$(optenv THOR_LEFT_HAND_TYPE  l_stump)_controllers.launch"/>
+  <include  file = "$(find thor_mang_gazebo_ros_control)/launch/hands/$(optenv RIGHT_HAND_TYPE r_stump)_controllers.launch" />
+  <include  file = "$(find thor_mang_gazebo_ros_control)/launch/hands/$(optenv LEFT_HAND_TYPE  l_stump)_controllers.launch"/>
 
 
 </launch>
