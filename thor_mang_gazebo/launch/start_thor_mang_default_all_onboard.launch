@@ -4,10 +4,13 @@
   <include file="$(find thor_mang_gazebo)/launch/start_thor_mang_default_with_controllers.launch"/>
   
   <include file="$(find thor_mang_onboard_launch)/launch/perception_common.launch"/>
+
+  <include file="$(find vigir_head_control)/launch/head_control_node.launch"/>
   
   <include file="$(find thor_mang_onboard_launch)/launch/no_comms_bridge/head_camera_relay.launch"/>
 
   <include file="$(find thor_mang_control_mode_switcher)/launch/control_mode_switcher_simulation.launch"/>
 
-  <include file="$(find vigir_be_launch)/launch/behavior_onboard_thor.launch"/>  
+  <include file="$(find vigir_be_launch)/launch/behavior_onboard_thor.launch"/>
+  
 </launch>
