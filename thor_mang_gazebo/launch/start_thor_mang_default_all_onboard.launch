@@ -9,6 +9,8 @@
   
   <include file="$(find thor_mang_onboard_launch)/launch/no_comms_bridge/head_camera_relay.launch"/>
 
+<node name="state_estimator" pkg="biped_state_estimator" type="state_estimator_test" output="screen" ns="/thor_mang"/>
+
   <include file="$(find thor_mang_control_mode_switcher)/launch/control_mode_switcher_simulation.launch"/>
 
   <include file="$(find vigir_be_launch)/launch/behavior_onboard_thor.launch"/>
