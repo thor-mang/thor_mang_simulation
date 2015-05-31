@@ -8,6 +8,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf
   vigir_footstep_planning_msgs
+  gazebo_msgs
+  actionlib
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -82,7 +85,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES thor_mang_fake_walking
-  CATKIN_DEPENDS roscpp tf vigir_footstep_planning_msgs
+  CATKIN_DEPENDS roscpp tf vigir_footstep_planning_msgs gazebo_msgs actionlib geometry_msgs
 )
 ###########
 ## Build ##

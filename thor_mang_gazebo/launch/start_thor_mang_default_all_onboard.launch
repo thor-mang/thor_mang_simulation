@@ -9,7 +9,11 @@
   
   <include file="$(find thor_mang_onboard_launch)/launch/no_comms_bridge/head_camera_relay.launch"/>
 
-<node name="state_estimator" pkg="biped_state_estimator" type="state_estimator_test" output="screen" ns="/thor_mang"/>
+ <!-- <node name="state_estimator" pkg="biped_state_estimator" type="state_estimator_test" output="screen" ns="/thor_mang"/> -->
+
+   <param name="/robot_description_semantic" textfile="$(find thor_mang_tud_moveit_config)/config/thor_mang_robot.srdf" />
+
+   <param name="/robot_description" command="$(find xacro)/xacro.py '$(find thor_mang_tud_description)/robots/$(optenv THOR_ROBOT_TYPE thor_mang)_tud_simple.urdf.xacro'" />
 
   <include file="$(find thor_mang_control_mode_switcher)/launch/control_mode_switcher_simulation.launch"/>
 
