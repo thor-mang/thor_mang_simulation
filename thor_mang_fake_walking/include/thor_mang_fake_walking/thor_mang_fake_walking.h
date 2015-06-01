@@ -26,6 +26,8 @@ protected:
 
     void executeFootstepCb(const vigir_footstep_planning_msgs::ExecuteStepPlanActionGoalConstPtr& goal);
 
+    bool getCurrentXYYaw(double &x, double &y, double &yaw);
+    void interpolateSteps(double x1, double y1, double yaw1, double x2, double y2, double yaw2);
 
 
 private:
@@ -34,6 +36,8 @@ private:
     ros::ServiceClient set_model_client_;
     ros::Subscriber execute_footstep_sub_;
     tf::TransformListener tf;
+
+    const double MAX_STEP_SIZE;
 
 
 };
