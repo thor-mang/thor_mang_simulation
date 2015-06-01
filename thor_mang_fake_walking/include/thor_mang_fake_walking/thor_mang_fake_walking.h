@@ -7,6 +7,7 @@
 #include <actionlib/client/simple_action_client.h>
 #include <vigir_footstep_planning_msgs/ExecuteStepPlanActionGoal.h>
 #include <ros/console.h>
+#include <tf/transform_listener.h>
 
 
 namespace fake_walking{
@@ -32,6 +33,7 @@ private:
     tf::TransformBroadcaster tf_broadcaster;
     ros::ServiceClient set_model_client_;
     ros::Subscriber execute_footstep_sub_;
+    tf::TransformListener tf;
 
 
 };

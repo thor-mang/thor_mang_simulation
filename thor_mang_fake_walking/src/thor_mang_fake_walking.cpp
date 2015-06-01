@@ -10,10 +10,10 @@ FakeWalking::FakeWalking(ros::NodeHandle &nh)
     execute_footstep_sub_ = nh_.subscribe("/vigir/footstep_manager/execute_step_plan/goal", 10, &FakeWalking::executeFootstepCb, this);
 
 
-//    setModelPose(0.0, 0.0, 0.0);
-//    ros::Rate rate(ros::Duration(2.0));
-//    rate.sleep();
-//    setModelPose(0.2, 0, 0);
+    setModelPose(0.0, 0.0, 0.0);
+   ros::Rate rate(ros::Duration(2.0));
+    rate.sleep();
+   setModelPose(0.0, 0, 0);
 //    rate.sleep();
 //    setModelPose(0.2, 0.5, 0);
 //    rate.sleep();
@@ -68,6 +68,18 @@ FakeWalking::~FakeWalking()
 
 
 void FakeWalking::setModelPose(double x, double y, double yaw){
+    double z = 0.86;
+    tf::StampedTransform pelvis_transform;
+
+    try {
+        tf.waitForTransform("world", "pelvis", now, ros::Duration(1.0));
+        tf.lookupTransform("world", "pelvis", now, pelvis_transform);
+        z = pelvis_transform.getOrigin().z();
+    } catch (std::runtime_error& e) {
+        ROS_WARN("Could not transform look_at position to target frame_id %s", e.what());
+
+    }
+
     std::cout << " setting pose " << x << "," << y << ", " << yaw << std::endl;
     set_model_client_.waitForExistence();
     gazebo_msgs::SetModelState msg;
@@ -83,12 +95,12 @@ void FakeWalking::setModelPose(double x, double y, double yaw){
 
     pose.position.x = x;
     pose.position.y = y;
-    pose.position.z = 0.86;
+    pose.position.z = z;
     msg.request.model_state.pose = pose;
 
     msg.request.model_state.reference_frame = "";
 
-    tf::Vector3 vec(x,y,0.0);
+    tf::Vector3 vec(x,y,z);
 
     set_model_client_.call(msg);
 
@@ -104,7 +116,9 @@ void FakeWalking::publishRobotPose(tf::Vector3 position, float yaw ){
     tf::Quaternion q;
     q.setRPY(0, 0, yaw);
     transform.setRotation(q);
+    std::cout << "publishing world " << std::endl;
     tf_broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "pelvis"));
+     std::cout << "published world " << std::endl;
 }
 
 
