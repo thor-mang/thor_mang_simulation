@@ -70,6 +70,7 @@ FakeWalking::~FakeWalking()
 void FakeWalking::setModelPose(double x, double y, double yaw){
     double z = 0.86;
     tf::StampedTransform pelvis_transform;
+    ros::Time now = ros::Time::now();
 
     try {
         tf.waitForTransform("world", "pelvis", now, ros::Duration(1.0));
