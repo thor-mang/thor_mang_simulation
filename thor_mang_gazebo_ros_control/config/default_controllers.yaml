@@ -16,13 +16,13 @@
       - l_wrist_yaw2
       
     gains: # Required because we're controlling an effort interface
-      l_shoulder_pitch: {p: &kp_shoulder_pitch 300,  d: &kd_shoulder_pitch 0.01, i: &ki_default 0, i_clamp: &ki__clamp_default 0}
-      l_shoulder_roll: {p: &kp_shoulder_roll 300,  d: &kd_shoulder_roll 0.01, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_shoulder_yaw: {p: &kp_default_arms 50,  d: &kd_default_arms 0.01, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_elbow: {p: &kp_elbow 50,  d: &kd_elbow 0.01, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_wrist_yaw1: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_wrist_roll: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_wrist_yaw2: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
+      l_shoulder_pitch: {p: &kp_shoulder_pitch 300,  d: &kd_shoulder_pitch 0.01, i: &ki_default 100, i_clamp_min: &ki__clamp_default 0, i_clamp_max: *ki__clamp_default}
+      l_shoulder_roll: {p: &kp_shoulder_roll 300,  d: &kd_shoulder_roll 1, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_shoulder_yaw: {p: &kp_default_arms 50,  d: &kd_shoulder_yaw 0.01, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_elbow: {p: &kp_elbow 300,  d: &kd_elbow 0.01, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_wrist_yaw1: {p: *kp_default_arms,  d: &kd_default_arms 0.01, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_wrist_roll: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_wrist_yaw2: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       
     constraints:
       goal_time: &goal_time_constraint 4.0
@@ -63,13 +63,13 @@
       - r_wrist_yaw2
       
     gains: # Required because we're controlling an effort interface
-      r_shoulder_pitch: {p: *kp_shoulder_pitch,  d: *kd_shoulder_pitch, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_shoulder_roll: {p: *kp_shoulder_roll,  d: *kd_shoulder_roll, i_clamp: *ki__clamp_default}
-      r_shoulder_yaw: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_elbow: {p: *kp_elbow,  d: *kd_elbow, i_clamp: *ki__clamp_default}
-      r_wrist_yaw1: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_wrist_roll: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_wrist_yaw2: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp: *ki__clamp_default}
+      r_shoulder_pitch: {p: *kp_shoulder_pitch,  d: *kd_shoulder_pitch, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_shoulder_roll: {p: *kp_shoulder_roll,  d: *kd_shoulder_roll, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_shoulder_yaw: {p: *kp_default_arms,  d: *kd_shoulder_yaw, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_elbow: {p: *kp_elbow,  d: *kd_elbow, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_wrist_yaw1: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_wrist_roll: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_wrist_yaw2: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       
     constraints:
       goal_time: *goal_time_constraint
@@ -105,8 +105,8 @@
       - waist_tilt
       
     gains: # Required because we're controlling an effort interface
-      waist_pan: {p: &kp_default 2000,  d: &kd_default 0.5, i: *ki_default, i_clamp: *ki__clamp_default}
-      waist_tilt: {p: 2000,  d: 10, i: *ki_default, i_clamp: *ki__clamp_default}     
+      waist_pan: {p: &kp_default 2000,  d: &kd_default 0.5, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      waist_tilt: {p: 2000,  d: 10, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}     
 
     constraints:
       goal_time: *goal_time_constraint
@@ -124,8 +124,8 @@
       - head_tilt
       
     gains: # Required because we're controlling an effort interface
-      head_pan: {p: *kp_default_arms,  d: 0, i: *ki_default, i_clamp: *ki__clamp_default}
-      head_tilt: {p: *kp_default_arms,  d: 0, i: *ki_default, i_clamp: *ki__clamp_default}
+      head_pan: {p: *kp_default_arms,  d: 0, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      head_tilt: {p: *kp_default_arms,  d: 0, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
 
     constraints:
       goal_time: *goal_time_constraint
@@ -143,7 +143,7 @@
       - waist_lidar
       
     gains: # Required because we're controlling an effort interface
-      waist_lidar: {p: *kp_default_arms,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
+      waist_lidar: {p: *kp_default_arms,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
 
     constraints:
       goal_time: *goal_time_constraint
@@ -164,12 +164,12 @@
       - l_ankle_roll
       
     gains: # Required because we're controlling an effort interface
-      l_hip_yaw: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_hip_roll: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_hip_pitch: {p: 300,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_knee: {p: *kp_default,  d: 20, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_ankle_pitch: {p: 1000,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      l_ankle_roll: {p: 1000,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
+      l_hip_yaw: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_hip_roll: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_hip_pitch: {p: &kp_hip_pitch 1000,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_knee: {p: *kp_default,  d: 20, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_ankle_pitch: {p: &kp_ankle 2000,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_ankle_roll: {p: *kp_ankle,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       
     constraints:
       goal_time: *goal_time_constraint
@@ -199,12 +199,12 @@
       - r_ankle_roll
       
     gains: # Required because we're controlling an effort interface
-      r_hip_yaw: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_hip_roll: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_hip_pitch: {p: 300,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_knee: {p: *kp_default,  d: 20, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_ankle_pitch: {p: 1000,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      r_ankle_roll: {p: 1000,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}        
+      r_hip_yaw: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_hip_roll: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_hip_pitch: {p: *kp_hip_pitch,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_knee: {p: *kp_default,  d: 20, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_ankle_pitch: {p: *kp_ankle,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_ankle_roll: {p: *kp_ankle,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}        
       
     constraints:
       goal_time: *goal_time_constraint
@@ -232,8 +232,8 @@
       #- l_f1_j0
 
     #gains: # Required because we're controlling an effort interface
-      #l_f0_j0: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      #l_f1_j0: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
+      #l_f0_j0: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      #l_f1_j0: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
 
 
     #constraints:
@@ -252,8 +252,8 @@
       #- r_f1_j0
 
     #gains: # Required because we're controlling an effort interface
-      #r_f0_j0: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
-      #r_f1_j0: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp: *ki__clamp_default}
+      #r_f0_j0: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      #r_f1_j0: {p: *kp_default,  d: *kd_default, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
 
 
     #constraints:
