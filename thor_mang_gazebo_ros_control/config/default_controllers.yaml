@@ -18,9 +18,9 @@
     gains: # Required because we're controlling an effort interface
       l_shoulder_pitch: {p: &kp_shoulder_pitch 300,  d: &kd_shoulder_pitch 0.01, i: &ki_default 100, i_clamp_min: &ki__clamp_default 0, i_clamp_max: *ki__clamp_default}
       l_shoulder_roll: {p: &kp_shoulder_roll 300,  d: &kd_shoulder_roll 1, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
-      l_shoulder_yaw: {p: &kp_default_arms 50,  d: &kd_shoulder_yaw 0.01, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_shoulder_yaw: {p: &kp_shoulder_yaw 300,  d: &kd_shoulder_yaw 0.01, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       l_elbow: {p: &kp_elbow 300,  d: &kd_elbow 0.01, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
-      l_wrist_yaw1: {p: *kp_default_arms,  d: &kd_default_arms 0.01, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      l_wrist_yaw1: {p: &kp_default_arms 50,  d: &kd_default_arms 0.01, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       l_wrist_roll: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       l_wrist_yaw2: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       
@@ -65,7 +65,7 @@
     gains: # Required because we're controlling an effort interface
       r_shoulder_pitch: {p: *kp_shoulder_pitch,  d: *kd_shoulder_pitch, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       r_shoulder_roll: {p: *kp_shoulder_roll,  d: *kd_shoulder_roll, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
-      r_shoulder_yaw: {p: *kp_default_arms,  d: *kd_shoulder_yaw, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
+      r_shoulder_yaw: {p: *kp_shoulder_yaw,  d: *kd_shoulder_yaw, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       r_elbow: {p: *kp_elbow,  d: *kd_elbow, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       r_wrist_yaw1: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
       r_wrist_roll: {p: *kp_default_arms,  d: *kd_default_arms, i: *ki_default, i_clamp_min: *ki__clamp_default, i_clamp_max: *ki__clamp_default}
