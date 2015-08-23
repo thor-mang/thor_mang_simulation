@@ -11,7 +11,7 @@
 
   <include file="$(find thor_mang_control_mode_switcher)/launch/control_mode_switcher_simulation.launch"/>
 
-  <include file="$(find vigir_be_launch)/launch/behavior_onboard_thor.launch"/>
+  <include file="$(find vigir_flexbe_launch)/launch/behavior_onboard_thor.launch"/>
 
 
   <!-- start footstep planner -->
