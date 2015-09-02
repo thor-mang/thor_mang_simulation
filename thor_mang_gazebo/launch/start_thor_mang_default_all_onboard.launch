@@ -9,6 +9,8 @@
   
   <include file="$(find thor_mang_onboard_launch)/launch/perception_common.launch"/>
 
+  <include file="$(find thor_mang_onboard_launch)/launch/manipulation_controllers.launch"/>
+
   <include file="$(find vigir_head_control)/launch/head_control_node.launch"/>
   
   <include file="$(find thor_mang_onboard_launch)/launch/no_comms_bridge/head_camera_relay.launch"/>
