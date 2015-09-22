@@ -17,8 +17,14 @@
             right_leg_traj_controller"/>
 
     <!-- convert joint states to TF transforms for rviz, etc -->
-<!--    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+    <!--
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
       <remap from="/joint_states" to="/thor_mang/joint_states" />
-    </node>-->
+    </node>
+    -->
+    
+    <include  file = "$(find thor_mang_gazebo_ros_control)/launch/head/$(optenv THOR_HEAD_TYPE robotis_standard)_head_controllers.launch" />
   </group>
+  
+  
 </launch>
