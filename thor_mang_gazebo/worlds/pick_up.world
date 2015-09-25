@@ -257,19 +257,19 @@
         </link>
       </model>
       <model name='cinder_block'>
-        <pose>0.517603 0.529258 0.020765 -0.002257 -0.00093 0.035313</pose>
+        <pose>0.510458 0.731545 0.020659 -0.000887 0.000269 0.035354</pose>
         <link name='link'>
-          <pose>0.517603 0.529258 0.020765 -0.002257 -0.00093 0.035313</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
+          <pose>0.510458 0.731545 0.020659 -0.000887 0.000269 0.035354</pose>
+          <velocity>0 -0 2e-06 -0.000176 -9e-06 2.06795e-25</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='lumber_2x4x48'>
-        <pose>0.498559 -0.060006 0.150493 1.59724 -0.183391 1.45517</pose>
+        <pose>0.483656 0.324577 0.173444 1.60346 -0.218253 1.45616</pose>
         <link name='link'>
-          <pose>0.498559 -0.060006 0.150493 1.59724 -0.183391 1.45517</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
+          <pose>0.483656 0.324577 0.173444 1.60346 -0.218253 1.45616</pose>
+          <velocity>-0.000171 -3.8e-05 0.000378 -0.000106 -0.009323 -0.002107</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
