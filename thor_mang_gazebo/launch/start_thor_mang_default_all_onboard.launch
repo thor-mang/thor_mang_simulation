@@ -16,6 +16,9 @@
 
   <include file="$(find vigir_head_control)/launch/head_control_node.launch"/>
   
+  <!-- Start the spinning of the head lidar -->
+  <node name="set_head_lidar_velocity" pkg="rostopic" type="rostopic" output="screen" args="pub -l /thor_mang/head_lidar_controller/command std_msgs/Float64 'data: 1.0'"/>
+
   <include file="$(find thor_mang_onboard_launch)/launch/no_comms_bridge/head_camera_relay.launch"/>
 
   <node name="state_estimator" pkg="biped_state_estimator" type="state_estimator_test" output="screen" ns="/thor_mang"/>
