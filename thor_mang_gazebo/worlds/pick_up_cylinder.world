@@ -183,93 +183,33 @@
       <pose>0 0.480826 0 0 -0 0</pose>
       <static>0</static>
     </model>
-    <model name='lumber_2x4x48'>
-      <link name='link'>
-        <inertial>
-          <mass>1.4111</mass>
-          <inertia>
-            <ixx>0.0011</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.1771</iyy>
-            <iyz>0</iyz>
-            <izz>0.1763</izz>
-          </inertia>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <box>
-              <size>1.2192 0.038 0.0888</size>
-            </box>
-          </geometry>
-          <surface>
-            <bounce>
-              <restitution_coefficient>0.01</restitution_coefficient>
-              <threshold>5</threshold>
-            </bounce>
-            <friction>
-              <ode>
-                <mu>5</mu>
-                <mu2>5</mu2>
-              </ode>
-            </friction>
-            <contact>
-              <ode>
-                <soft_cfm>0.001</soft_cfm>
-                <kp>10000</kp>
-                <kd>1000</kd>
-                <max_vel>0.01</max_vel>
-                <min_depth>0.001</min_depth>
-              </ode>
-            </contact>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://drc_practice_2x4/meshes/2x4x48.dae</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <velocity_decay>
-          <linear>0</linear>
-          <angular>0</angular>
-        </velocity_decay>
-        <self_collide>0</self_collide>
-        <kinematic>0</kinematic>
-        <gravity>1</gravity>
-      </link>
-      <pose>0 -1 0 0 -0 0</pose>
-      <static>0</static>
-    </model>
     <state world_name='default'>
-      <sim_time>1332 841000000</sim_time>
-      <real_time>1056 145248260</real_time>
-      <wall_time>1443612154 57009579</wall_time>
+      <sim_time>1345 62000000</sim_time>
+      <real_time>14 44058090</real_time>
+      <wall_time>1443617796 564617648</wall_time>
       <model name='asphalt_plane'>
-        <pose>-0.102986 -0.01034 -0.02886 0 -0 0</pose>
+        <pose>-0.00306 -0.041009 -0.02886 0 -0 0</pose>
         <link name='link'>
-          <pose>-0.102986 -0.01034 -0.02886 0 -0 0</pose>
+          <pose>-0.00306 -0.041009 -0.02886 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='cinder_block'>
-        <pose>0.476222 0.571152 0.020753 -0.000452 0.000228 0.035354</pose>
+        <pose>0.476365 0.572612 0.019913 0.001754 -0.000236 0.034692</pose>
         <link name='link'>
-          <pose>0.476222 0.571152 0.020753 -0.000452 0.000228 0.035354</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
+          <pose>0.476365 0.572612 0.019913 0.001754 -0.000236 0.034692</pose>
+          <velocity>0.000318 0.001764 -0.011722 -0.00385 -0.001752 -0.002113</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='lumber_2x4x48'>
-        <pose>0.439004 0.175645 0.174729 1.59499 -0.224182 1.49651</pose>
+      <model name='unit_cylinder_1'>
+        <pose>0.441456 0.189062 0.177628 1.79813 0.022543 -0.048384</pose>
         <link name='link'>
-          <pose>0.439004 0.175645 0.174729 1.59499 -0.224182 1.49651</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
+          <pose>0.441456 0.189062 0.177628 1.79813 0.022543 -0.048384</pose>
+          <velocity>-5.9e-05 -0.000162 0.001381 -0.010525 0.003109 0.000925</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
@@ -277,7 +217,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-0.440423 3.0594 2.51954 0 0.491427 -1.02966</pose>
+        <pose>6.95828 6.78432 4.48483 3.15488e-17 0.495427 -2.57766</pose>
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
@@ -325,6 +265,62 @@
         <gravity>1</gravity>
       </link>
       <pose>2.47587 -7 0 0 -0 0</pose>
+    </model>
+    <model name='unit_cylinder_1'>
+      <pose>0 1.44999 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.0192304</radius>
+              <length>1.22272</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <bounce/>
+            <friction>
+              <ode/>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.0192304</radius>
+              <length>1.22272</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay>
+          <linear>0</linear>
+          <angular>0</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+      <static>0</static>
     </model>
   </world>
 </sdf>
