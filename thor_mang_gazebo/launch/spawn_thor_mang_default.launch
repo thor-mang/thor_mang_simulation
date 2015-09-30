@@ -56,4 +56,8 @@
     <param name="publish_frequency" type="double" value="50.0" />
     <remap from="joint_states" to="/thor_mang/joint_states" />
   </node>
+  
+  <node name="relay_head_image" pkg="topic_tools" type="relay" args="/head_cam/image_raw /camera/image_raw" />
+  <node name="relay_head_camera_info" pkg="topic_tools" type="relay" args="/head_cam/camera_info /camera/camera_info" />  
+  
 </launch>
