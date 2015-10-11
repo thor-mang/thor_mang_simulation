@@ -40,16 +40,15 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>control_toolbox</build_depend>
   <build_depend>controller_manager</build_depend>
+  <build_depend>gazebo_ros_control</build_depend>
+  <run_depend>control_toolbox</run_depend>
   <run_depend>controller_manager</run_depend>
+  <run_depend>gazebo_ros_control</run_depend>
+  
 
-
-  <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- You can specify that this package is a metapackage here: -->
-    <!-- <metapackage/> -->
-
-    <!-- Other tools can request additional information be placed here -->
-
+    <gazebo_ros_control plugin="${prefix}/thor_mang_hw_sim_plugins.xml"/>
   </export>
 </package>

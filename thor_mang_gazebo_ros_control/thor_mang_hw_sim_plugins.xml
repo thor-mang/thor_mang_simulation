@@ -1,0 +1,12 @@
+<library path="lib/libthor_mang_robot_hw_sim">
+
+  <class
+    name="gazebo_ros_control/ThorMangRobotHWSim"
+    type="gazebo_ros_control::ThorMangRobotHWSim"
+    base_class_type="gazebo_ros_control::RobotHWSim">
+    <description>
+      A robot simulation interface which constructs joint handles from an SDF/URDF
+      and also IMU and F/T sensor handles for the thor_mang robot
+    </description>
+  </class>
+</library>
