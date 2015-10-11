@@ -44,6 +44,8 @@
 // ros_control
 #include <control_toolbox/pid.h>
 #include <hardware_interface/joint_command_interface.h>
+#include <hardware_interface/force_torque_sensor_interface.h>
+#include <hardware_interface/imu_sensor_interface.h>
 #include <hardware_interface/robot_hw.h>
 #include <joint_limits_interface/joint_limits.h>
 #include <joint_limits_interface/joint_limits_interface.h>
@@ -74,6 +76,15 @@ namespace gazebo_ros_control
 class ThorMangRobotHWSim : public gazebo_ros_control::RobotHWSim
 {
 public:
+
+  enum ftSensorIndex
+  {
+    R_ARM                         = 0,
+    L_ARM                         = 1,
+    R_LEG                         = 2,
+    L_LEG                         = 3,
+    MAXIMUM_NUMBER_OF_FT_SENSORS  = 4
+  };
 
   virtual bool initSim(
     const std::string& robot_namespace,
@@ -110,6 +121,9 @@ protected:
   hardware_interface::PositionJointInterface pj_interface_;
   hardware_interface::VelocityJointInterface vj_interface_;
 
+  hardware_interface::ForceTorqueSensorInterface ft_interface_;
+  hardware_interface::ImuSensorInterface         imu_interface_;
+
   joint_limits_interface::EffortJointSaturationInterface   ej_sat_interface_;
   joint_limits_interface::EffortJointSoftLimitsInterface   ej_limits_interface_;
   joint_limits_interface::PositionJointSaturationInterface pj_sat_interface_;
@@ -131,6 +145,21 @@ protected:
   std::vector<double> joint_position_command_;
   std::vector<double> last_joint_position_command_;
   std::vector<double> joint_velocity_command_;
+
+  // IMU
+  hardware_interface::ImuSensorHandle::Data imu_data;
+  double imu_orientation[4];
+  double imu_angular_velocity[3];
+  double imu_linear_acceleration[3];
+
+  // FT-Sensors
+  std::string ftSensorUIDs[MAXIMUM_NUMBER_OF_FT_SENSORS];
+  std::string ftSensorJoints[MAXIMUM_NUMBER_OF_FT_SENSORS];
+  double force_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
+  double torque_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
+  gazebo::physics::JointPtr ft_joints_[MAXIMUM_NUMBER_OF_FT_SENSORS];
+  //double force_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
+  //double torque_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
 
   std::vector<gazebo::physics::JointPtr> sim_joints_;
 

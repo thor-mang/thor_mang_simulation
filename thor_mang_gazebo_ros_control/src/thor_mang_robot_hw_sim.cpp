@@ -224,6 +224,50 @@ bool ThorMangRobotHWSim::initSim(
     }
   }
 
+  /** register sensors */
+  // IMU
+  imu_data.name = "pelvis_imu";
+  imu_data.frame_id = "pelvis";
+  imu_data.orientation = imu_orientation;
+  imu_data.angular_velocity = imu_angular_velocity;
+  imu_data.linear_acceleration = imu_linear_acceleration;
+  hardware_interface::ImuSensorHandle imu_sensor_handle(imu_data);
+  imu_interface_.registerHandle(imu_sensor_handle);
+  registerInterface(&imu_interface_);
+
+
+  ftSensorUIDs[0] = "r_hand";
+  ftSensorUIDs[1] = "l_hand";
+  ftSensorUIDs[2] = "r_foot";
+  ftSensorUIDs[3] = "l_foot";
+
+  ftSensorJoints[0] = "r_wrist_yaw2";
+  ftSensorJoints[1] = "l_wrist_yaw2";
+  ftSensorJoints[2] = "r_ankle_roll";
+  ftSensorJoints[3] = "l_ankle_roll";
+
+  // FT-Sensors
+  for (unsigned int sensorIndex = 0; sensorIndex < MAXIMUM_NUMBER_OF_FT_SENSORS; sensorIndex++)
+  {
+    hardware_interface::ForceTorqueSensorHandle force_torque_sensor_handle_raw(ftSensorUIDs[sensorIndex] + "_raw", ftSensorUIDs[sensorIndex], force_raw[sensorIndex], torque_raw[sensorIndex]);
+    ft_interface_.registerHandle(force_torque_sensor_handle_raw);
+
+    ft_joints_[sensorIndex] = parent_model->GetJoint(ftSensorJoints[sensorIndex]);
+
+    if (!ft_joints_[sensorIndex]){
+      ROS_ERROR("Null pointer for joint %s", ftSensorJoints[sensorIndex].c_str());
+    }
+
+    ft_joints_[sensorIndex]->SetProvideFeedback(true);
+
+    //hardware_interface::ForceTorqueSensorHandle force_torque_sensor_handle_compensated(ftSensorUIDs[sensorIndex], ftSensorUIDs[sensorIndex], force_compensated[sensorIndex], torque_compensated[sensorIndex]);
+    //force_torque_sensor_interface.registerHandle(force_torque_sensor_handle_compensated);
+  }
+  registerInterface(&ft_interface_);
+
+
+
+
   // Register interfaces
   registerInterface(&js_interface_);
   registerInterface(&ej_interface_);
@@ -253,6 +297,30 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
     }
     joint_velocity_[j] = sim_joints_[j]->GetVelocity(0);
     joint_effort_[j] = sim_joints_[j]->GetForce((unsigned int)(0));
+  }
+
+  // FT-Sensors
+  for (unsigned int sensorIndex = 0; sensorIndex < MAXIMUM_NUMBER_OF_FT_SENSORS; sensorIndex++)
+  {
+    gazebo::physics::JointWrench wrench;
+    gazebo::math::Vector3 torque;
+    gazebo::math::Vector3 force;
+
+    // FIXME: Should include options for different frames and measure directions
+    // E.g: https://bitbucket.org/osrf/gazebo/raw/default/gazebo/sensors/ForceTorqueSensor.hh
+    // Get force torque at the joint
+    // The wrench is reported in the CHILD <frame>
+    // The <measure_direction> is child_to_parent
+    wrench = ft_joints_[sensorIndex]->GetForceTorque(0);
+    force = wrench.body2Force;
+    torque = wrench.body2Torque;
+
+    force_raw[sensorIndex][0] = force.x; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    force_raw[sensorIndex][1] = force.y; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    force_raw[sensorIndex][2] = force.z; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    torque_raw[sensorIndex][0] = torque.x; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    torque_raw[sensorIndex][1] = torque.y; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    torque_raw[sensorIndex][2] = torque.z; //+ this->GaussianKernel(0, this->gaussian_noise_);
   }
 }
 
