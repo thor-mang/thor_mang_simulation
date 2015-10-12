@@ -1,3 +1,31 @@
+//=================================================================================================
+// Copyright (c) 2015, Stefan Kohlbrecher, TU Darmstadt
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Simulation, Systems Optimization and Robotics
+//       group, TU Darmstadt, nor the names of its contributors may be used to
+//       endorse or promote products derived from this software without
+//       specific prior written permission.
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
+// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//=================================================================================================
+
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
@@ -327,102 +355,74 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
   }
 
   // IMU (largely copied from hector_gazebo_ros_imu)
-  // Get Time Difference dt
+  double dt = period.toSec();
 
+  // Get Pose/Orientation
+  gazebo::math::Pose pose = imu_link_->GetWorldPose();
+  gazebo::math::Quaternion rot = this->offset_.rot * pose.rot;
+  rot.Normalize();
 
-   //gazebo::common::Time cur_time = world->GetSimTime();
-   //double dt = updateTimer.getTimeSinceLastUpdate().Double();
+  // get Gravity
+  gravity = world_->GetPhysicsEngine()->GetGravity();
+  double gravity_length = gravity.GetLength();
+  ROS_DEBUG_NAMED("gazebo_ros_imu", "gravity_world = [%g %g %g]", gravity.x, gravity.y, gravity.z);
 
-   double dt = period.toSec();
-   //boost::mutex::scoped_lock scoped_lock(lock);
+  // get Acceleration and Angular Rates
+  // the result of GetRelativeLinearAccel() seems to be unreliable (sum of forces added during the current simulation step)?
+  //accel = myBody->GetRelativeLinearAccel(); // get acceleration in body frame
+  gazebo::math::Vector3 temp = imu_link_->GetWorldLinearVel(); // get velocity in world frame
+  if (dt > 0.0) accel = rot.RotateVectorReverse((temp - velocity) / dt - gravity);
+  velocity = temp;
 
-   // Get Pose/Orientation
-   gazebo::math::Pose pose = imu_link_->GetWorldPose();
-   // math::Vector3 pos = pose.pos + this->offset_.pos;
-   gazebo::math::Quaternion rot = this->offset_.rot * pose.rot;
-   rot.Normalize();
+  // calculate angular velocity from delta quaternion
+  // note: link->GetRelativeAngularVel() sometimes return nan?
+  // rate  = link->GetRelativeAngularVel(); // get angular rate in body frame
+  gazebo::math::Quaternion delta = this->orientation.GetInverse() * rot;
+  this->orientation = rot;
+  if (dt > 0.0) {
+    rate = 2.0 * acos(std::max(std::min(delta.w, 1.0), -1.0)) * gazebo::math::Vector3(delta.x, delta.y, delta.z).Normalize() / dt;
+  }
 
-   // get Gravity
-   gravity = world_->GetPhysicsEngine()->GetGravity();
-   double gravity_length = gravity.GetLength();
-   ROS_DEBUG_NAMED("gazebo_ros_imu", "gravity_world = [%g %g %g]", gravity.x, gravity.y, gravity.z);
-
-   // get Acceleration and Angular Rates
-   // the result of GetRelativeLinearAccel() seems to be unreliable (sum of forces added during the current simulation step)?
-   //accel = myBody->GetRelativeLinearAccel(); // get acceleration in body frame
-   gazebo::math::Vector3 temp = imu_link_->GetWorldLinearVel(); // get velocity in world frame
-   if (dt > 0.0) accel = rot.RotateVectorReverse((temp - velocity) / dt - gravity);
-   velocity = temp;
-
-   // calculate angular velocity from delta quaternion
-   // note: link->GetRelativeAngularVel() sometimes return nan?
-   // rate  = link->GetRelativeAngularVel(); // get angular rate in body frame
-   gazebo::math::Quaternion delta = this->orientation.GetInverse() * rot;
-   this->orientation = rot;
-   if (dt > 0.0) {
-     rate = 2.0 * acos(std::max(std::min(delta.w, 1.0), -1.0)) * gazebo::math::Vector3(delta.x, delta.y, delta.z).Normalize() / dt;
-   }
-
-   // update sensor models
-   accel = accelModel(accel, dt);
-   rate  = rateModel(rate, dt);
-   yawModel.update(dt);
-   ROS_DEBUG_NAMED("gazebo_ros_imu", "Current bias errors: accel = [%g %g %g], rate = [%g %g %g], yaw = %g",
+  // update sensor models
+  accel = accelModel(accel, dt);
+  rate  = rateModel(rate, dt);
+  yawModel.update(dt);
+  ROS_DEBUG_NAMED("gazebo_ros_imu", "Current bias errors: accel = [%g %g %g], rate = [%g %g %g], yaw = %g",
                   accelModel.getCurrentBias().x, accelModel.getCurrentBias().y, accelModel.getCurrentBias().z,
                   rateModel.getCurrentBias().x, rateModel.getCurrentBias().y, rateModel.getCurrentBias().z,
                   yawModel.getCurrentBias());
-   ROS_DEBUG_NAMED("gazebo_ros_imu", "Scale errors: accel = [%g %g %g], rate = [%g %g %g], yaw = %g",
+  ROS_DEBUG_NAMED("gazebo_ros_imu", "Scale errors: accel = [%g %g %g], rate = [%g %g %g], yaw = %g",
                   accelModel.getScaleError().x, accelModel.getScaleError().y, accelModel.getScaleError().z,
                   rateModel.getScaleError().x, rateModel.getScaleError().y, rateModel.getScaleError().z,
                   yawModel.getScaleError());
 
 
-   // apply accelerometer and yaw drift error to orientation (pseudo AHRS)
-   gazebo::math::Vector3 accelDrift = pose.rot.RotateVector(accelModel.getCurrentBias());
-   double yawError = yawModel.getCurrentBias();
-   gazebo::math::Quaternion orientationError(
-     gazebo::math::Quaternion(cos(yawError/2), 0.0, 0.0, sin(yawError/2)) *                                         // yaw error
-     gazebo::math::Quaternion(1.0, 0.5 * accelDrift.y / gravity_length, 0.5 * -accelDrift.x / gravity_length, 0.0)  // roll and pitch error
-   );
+  // apply accelerometer and yaw drift error to orientation (pseudo AHRS)
+  gazebo::math::Vector3 accelDrift = pose.rot.RotateVector(accelModel.getCurrentBias());
+  double yawError = yawModel.getCurrentBias();
+  gazebo::math::Quaternion orientationError(
+        gazebo::math::Quaternion(cos(yawError/2), 0.0, 0.0, sin(yawError/2)) *                                         // yaw error
+        gazebo::math::Quaternion(1.0, 0.5 * accelDrift.y / gravity_length, 0.5 * -accelDrift.x / gravity_length, 0.0)  // roll and pitch error
+        );
 
-   orientationError.Normalize();
-   rot = orientationError * rot;
+  orientationError.Normalize();
+  rot = orientationError * rot;
 
-   imu_orientation[0] = rot.x;
-   imu_orientation[1] = rot.y;
-   imu_orientation[2] = rot.z;
-   imu_orientation[3] = rot.w;
+  imu_orientation[0] = rot.x;
+  imu_orientation[1] = rot.y;
+  imu_orientation[2] = rot.z;
+  imu_orientation[3] = rot.w;
 
-   imu_angular_velocity[0] = rate.x;
-   imu_angular_velocity[1] = rate.y;
-   imu_angular_velocity[2] = rate.z;
+  imu_angular_velocity[0] = rate.x;
+  imu_angular_velocity[1] = rate.y;
+  imu_angular_velocity[2] = rate.z;
 
-   imu_linear_acceleration[0] = accel.x;
-   imu_linear_acceleration[1] = accel.y;
-   imu_linear_acceleration[2] = accel.z;
+  imu_linear_acceleration[0] = accel.x;
+  imu_linear_acceleration[1] = accel.y;
+  imu_linear_acceleration[2] = accel.z;
 
-   /*
-   // copy data into pose message
-   imuMsg.header.frame_id = imu_data.frame_id;
-   imuMsg.header.stamp = time;
-
-   // orientation quaternion
-   imuMsg.orientation.x = rot.x;
-   imuMsg.orientation.y = rot.y;
-   imuMsg.orientation.z = rot.z;
-   imuMsg.orientation.w = rot.w;
-
-   // pass angular rates
-   imuMsg.angular_velocity.x    = rate.x;
-   imuMsg.angular_velocity.y    = rate.y;
-   imuMsg.angular_velocity.z    = rate.z;
-
-   // pass accelerations
-   imuMsg.linear_acceleration.x    = accel.x;
-   imuMsg.linear_acceleration.y    = accel.y;
-   imuMsg.linear_acceleration.z    = accel.z;
-
-   // fill in covariance matrix
+  /*
+    // fill in covariance matrix
    imuMsg.orientation_covariance[8] = yawModel.gaussian_noise*yawModel.gaussian_noise;
    if (gravity_length > 0.0) {
      imuMsg.orientation_covariance[0] = accelModel.gaussian_noise.x*accelModel.gaussian_noise.x/(gravity_length*gravity_length);
@@ -431,9 +431,7 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
      imuMsg.orientation_covariance[0] = -1;
      imuMsg.orientation_covariance[4] = -1;
    }
-   */
-
-
+  */
 }
 
 void ThorMangRobotHWSim::writeSim(ros::Time time, ros::Duration period)
