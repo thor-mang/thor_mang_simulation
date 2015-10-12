@@ -2,11 +2,15 @@
 #thor:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 50
+    publish_rate: 125
         
   force_torque_sensor_controller:
     type: force_torque_sensor_controller/ForceTorqueSensorController
-    publish_rate: 125    
+    publish_rate: 125
+    
+  imu_sensor_controller:
+    type: imu_sensor_controller/ImuSensorController
+    publish_rate: 125
     
   left_arm_traj_controller:
     type: "effort_controllers/JointTrajectoryController"

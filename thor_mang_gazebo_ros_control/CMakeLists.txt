@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   control_toolbox
   controller_manager
   gazebo_ros_control
+  hector_gazebo_plugins
 )
 
 # Depend on system install of Gazebo 
@@ -17,6 +18,7 @@ catkin_package(
     control_toolbox
     controller_manager
     gazebo_ros_control
+    hector_gazebo_plugins
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} thor_mang_robot_hw_sim
   DEPENDS gazebo

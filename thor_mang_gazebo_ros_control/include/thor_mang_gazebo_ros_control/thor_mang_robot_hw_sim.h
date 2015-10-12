@@ -65,6 +65,8 @@
 // gazebo_ros_control
 #include <gazebo_ros_control/robot_hw_sim.h>
 
+#include <hector_gazebo_plugins/sensor_model.h>
+
 // URDF
 #include <urdf/model.h>
 
@@ -151,6 +153,23 @@ protected:
   double imu_orientation[4];
   double imu_angular_velocity[3];
   double imu_linear_acceleration[3];
+  gazebo::physics::WorldPtr world_;
+  gazebo::physics::LinkPtr imu_link_;
+
+  /// \brief save current body/physics state
+  gazebo::math::Quaternion orientation;
+  gazebo::math::Vector3 velocity;
+  gazebo::math::Vector3 accel;
+  gazebo::math::Vector3 rate;
+  gazebo::math::Vector3 gravity;
+
+  /// \brief Sensor models
+  gazebo::SensorModel3 accelModel;
+  gazebo::SensorModel3 rateModel;
+  gazebo::SensorModel yawModel;
+
+  /// \brief allow specifying constant xyz and rpy offsets
+  gazebo::math::Pose offset_;
 
   // FT-Sensors
   std::string ftSensorUIDs[MAXIMUM_NUMBER_OF_FT_SENSORS];

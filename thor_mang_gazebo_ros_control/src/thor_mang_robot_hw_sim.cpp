@@ -235,6 +235,9 @@ bool ThorMangRobotHWSim::initSim(
   imu_interface_.registerHandle(imu_sensor_handle);
   registerInterface(&imu_interface_);
 
+  world_ = parent_model->GetWorld();
+  imu_link_ = parent_model->GetLink(imu_data.frame_id);
+
 
   ftSensorUIDs[0] = "r_hand";
   ftSensorUIDs[1] = "l_hand";
@@ -322,6 +325,115 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
     torque_raw[sensorIndex][1] = torque.y; //+ this->GaussianKernel(0, this->gaussian_noise_);
     torque_raw[sensorIndex][2] = torque.z; //+ this->GaussianKernel(0, this->gaussian_noise_);
   }
+
+  // IMU (largely copied from hector_gazebo_ros_imu)
+  // Get Time Difference dt
+
+
+   //gazebo::common::Time cur_time = world->GetSimTime();
+   //double dt = updateTimer.getTimeSinceLastUpdate().Double();
+
+   double dt = period.toSec();
+   //boost::mutex::scoped_lock scoped_lock(lock);
+
+   // Get Pose/Orientation
+   gazebo::math::Pose pose = imu_link_->GetWorldPose();
+   // math::Vector3 pos = pose.pos + this->offset_.pos;
+   gazebo::math::Quaternion rot = this->offset_.rot * pose.rot;
+   rot.Normalize();
+
+   // get Gravity
+   gravity = world_->GetPhysicsEngine()->GetGravity();
+   double gravity_length = gravity.GetLength();
+   ROS_DEBUG_NAMED("gazebo_ros_imu", "gravity_world = [%g %g %g]", gravity.x, gravity.y, gravity.z);
+
+   // get Acceleration and Angular Rates
+   // the result of GetRelativeLinearAccel() seems to be unreliable (sum of forces added during the current simulation step)?
+   //accel = myBody->GetRelativeLinearAccel(); // get acceleration in body frame
+   gazebo::math::Vector3 temp = imu_link_->GetWorldLinearVel(); // get velocity in world frame
+   if (dt > 0.0) accel = rot.RotateVectorReverse((temp - velocity) / dt - gravity);
+   velocity = temp;
+
+   // calculate angular velocity from delta quaternion
+   // note: link->GetRelativeAngularVel() sometimes return nan?
+   // rate  = link->GetRelativeAngularVel(); // get angular rate in body frame
+   gazebo::math::Quaternion delta = this->orientation.GetInverse() * rot;
+   this->orientation = rot;
+   if (dt > 0.0) {
+     rate = 2.0 * acos(std::max(std::min(delta.w, 1.0), -1.0)) * gazebo::math::Vector3(delta.x, delta.y, delta.z).Normalize() / dt;
+   }
+
+   // update sensor models
+   accel = accelModel(accel, dt);
+   rate  = rateModel(rate, dt);
+   yawModel.update(dt);
+   ROS_DEBUG_NAMED("gazebo_ros_imu", "Current bias errors: accel = [%g %g %g], rate = [%g %g %g], yaw = %g",
+                  accelModel.getCurrentBias().x, accelModel.getCurrentBias().y, accelModel.getCurrentBias().z,
+                  rateModel.getCurrentBias().x, rateModel.getCurrentBias().y, rateModel.getCurrentBias().z,
+                  yawModel.getCurrentBias());
+   ROS_DEBUG_NAMED("gazebo_ros_imu", "Scale errors: accel = [%g %g %g], rate = [%g %g %g], yaw = %g",
+                  accelModel.getScaleError().x, accelModel.getScaleError().y, accelModel.getScaleError().z,
+                  rateModel.getScaleError().x, rateModel.getScaleError().y, rateModel.getScaleError().z,
+                  yawModel.getScaleError());
+
+
+   // apply accelerometer and yaw drift error to orientation (pseudo AHRS)
+   gazebo::math::Vector3 accelDrift = pose.rot.RotateVector(accelModel.getCurrentBias());
+   double yawError = yawModel.getCurrentBias();
+   gazebo::math::Quaternion orientationError(
+     gazebo::math::Quaternion(cos(yawError/2), 0.0, 0.0, sin(yawError/2)) *                                         // yaw error
+     gazebo::math::Quaternion(1.0, 0.5 * accelDrift.y / gravity_length, 0.5 * -accelDrift.x / gravity_length, 0.0)  // roll and pitch error
+   );
+
+   orientationError.Normalize();
+   rot = orientationError * rot;
+
+   imu_orientation[0] = rot.x;
+   imu_orientation[1] = rot.y;
+   imu_orientation[2] = rot.z;
+   imu_orientation[3] = rot.w;
+
+   imu_angular_velocity[0] = rate.x;
+   imu_angular_velocity[1] = rate.y;
+   imu_angular_velocity[2] = rate.z;
+
+   imu_linear_acceleration[0] = accel.x;
+   imu_linear_acceleration[1] = accel.y;
+   imu_linear_acceleration[2] = accel.z;
+
+   /*
+   // copy data into pose message
+   imuMsg.header.frame_id = imu_data.frame_id;
+   imuMsg.header.stamp = time;
+
+   // orientation quaternion
+   imuMsg.orientation.x = rot.x;
+   imuMsg.orientation.y = rot.y;
+   imuMsg.orientation.z = rot.z;
+   imuMsg.orientation.w = rot.w;
+
+   // pass angular rates
+   imuMsg.angular_velocity.x    = rate.x;
+   imuMsg.angular_velocity.y    = rate.y;
+   imuMsg.angular_velocity.z    = rate.z;
+
+   // pass accelerations
+   imuMsg.linear_acceleration.x    = accel.x;
+   imuMsg.linear_acceleration.y    = accel.y;
+   imuMsg.linear_acceleration.z    = accel.z;
+
+   // fill in covariance matrix
+   imuMsg.orientation_covariance[8] = yawModel.gaussian_noise*yawModel.gaussian_noise;
+   if (gravity_length > 0.0) {
+     imuMsg.orientation_covariance[0] = accelModel.gaussian_noise.x*accelModel.gaussian_noise.x/(gravity_length*gravity_length);
+     imuMsg.orientation_covariance[4] = accelModel.gaussian_noise.y*accelModel.gaussian_noise.y/(gravity_length*gravity_length);
+   } else {
+     imuMsg.orientation_covariance[0] = -1;
+     imuMsg.orientation_covariance[4] = -1;
+   }
+   */
+
+
 }
 
 void ThorMangRobotHWSim::writeSim(ros::Time time, ros::Duration period)
