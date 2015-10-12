@@ -66,8 +66,8 @@
    Desc:   Hardware Interface for any simulated robot in Gazebo
 */
 
-#ifndef _GAZEBO_ROS_CONTROL___DEFAULT_ROBOT_HW_SIM_H_
-#define _GAZEBO_ROS_CONTROL___DEFAULT_ROBOT_HW_SIM_H_
+#ifndef _GAZEBO_ROS_CONTROL___THOR_MANG_ROBOT_HW_SIM_H_
+#define _GAZEBO_ROS_CONTROL___THOR_MANG_ROBOT_HW_SIM_H_
 
 // ros_control
 #include <control_toolbox/pid.h>
@@ -91,7 +91,7 @@
 #include <pluginlib/class_list_macros.h>
 
 // gazebo_ros_control
-#include <gazebo_ros_control/robot_hw_sim.h>
+#include <gazebo_ros_control/default_robot_hw_sim.h>
 
 #include <hector_gazebo_plugins/sensor_model.h>
 
@@ -103,7 +103,13 @@
 namespace gazebo_ros_control
 {
 
-class ThorMangRobotHWSim : public gazebo_ros_control::RobotHWSim
+/**
+ * @brief The ThorMangRobotHWSim class provides a ros_control interface
+ * for the thor mang robot. It inherits from DefaultHWSim which makes
+ * the standard gazebo_ros_control hardware interface available and
+ * adds support for the 4 force/torque sensors and IMU used on the robot.
+ */
+class ThorMangRobotHWSim : public gazebo_ros_control::DefaultRobotHWSim
 {
 public:
 
@@ -125,58 +131,12 @@ public:
 
   virtual void readSim(ros::Time time, ros::Duration period);
 
-  virtual void writeSim(ros::Time time, ros::Duration period);
-
-  virtual void eStopActive(const bool active);
-
 protected:
-  // Methods used to control a joint.
-  enum ControlMethod {EFFORT, POSITION, POSITION_PID, VELOCITY, VELOCITY_PID};
-
-  // Register the limits of the joint specified by joint_name and joint_handle. The limits are
-  // retrieved from joint_limit_nh. If urdf_model is not NULL, limits are retrieved from it also.
-  // Return the joint's type, lower position limit, upper position limit, and effort limit.
-  void registerJointLimits(const std::string& joint_name,
-                           const hardware_interface::JointHandle& joint_handle,
-                           const ControlMethod ctrl_method,
-                           const ros::NodeHandle& joint_limit_nh,
-                           const urdf::Model *const urdf_model,
-                           int *const joint_type, double *const lower_limit,
-                           double *const upper_limit, double *const effort_limit);
-
-  unsigned int n_dof_;
-
-  hardware_interface::JointStateInterface    js_interface_;
-  hardware_interface::EffortJointInterface   ej_interface_;
-  hardware_interface::PositionJointInterface pj_interface_;
-  hardware_interface::VelocityJointInterface vj_interface_;
 
   hardware_interface::ForceTorqueSensorInterface ft_interface_;
   hardware_interface::ImuSensorInterface         imu_interface_;
 
-  joint_limits_interface::EffortJointSaturationInterface   ej_sat_interface_;
-  joint_limits_interface::EffortJointSoftLimitsInterface   ej_limits_interface_;
-  joint_limits_interface::PositionJointSaturationInterface pj_sat_interface_;
-  joint_limits_interface::PositionJointSoftLimitsInterface pj_limits_interface_;
-  joint_limits_interface::VelocityJointSaturationInterface vj_sat_interface_;
-  joint_limits_interface::VelocityJointSoftLimitsInterface vj_limits_interface_;
-
-  std::vector<std::string> joint_names_;
-  std::vector<int> joint_types_;
-  std::vector<double> joint_lower_limits_;
-  std::vector<double> joint_upper_limits_;
-  std::vector<double> joint_effort_limits_;
-  std::vector<ControlMethod> joint_control_methods_;
-  std::vector<control_toolbox::Pid> pid_controllers_;
-  std::vector<double> joint_position_;
-  std::vector<double> joint_velocity_;
-  std::vector<double> joint_effort_;
-  std::vector<double> joint_effort_command_;
-  std::vector<double> joint_position_command_;
-  std::vector<double> last_joint_position_command_;
-  std::vector<double> joint_velocity_command_;
-
-  // IMU
+  // IMU related members
   hardware_interface::ImuSensorHandle::Data imu_data;
   double imu_orientation[4];
   double imu_angular_velocity[3];
@@ -199,23 +159,17 @@ protected:
   /// \brief allow specifying constant xyz and rpy offsets
   gazebo::math::Pose offset_;
 
-  // FT-Sensors
+  // FT-Sensor related members
   std::string ftSensorUIDs[MAXIMUM_NUMBER_OF_FT_SENSORS];
   std::string ftSensorJoints[MAXIMUM_NUMBER_OF_FT_SENSORS];
   double force_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   double torque_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   gazebo::physics::JointPtr ft_joints_[MAXIMUM_NUMBER_OF_FT_SENSORS];
-  //double force_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
-  //double torque_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
 
-  std::vector<gazebo::physics::JointPtr> sim_joints_;
-
-  // e_stop_active_ is true if the emergency stop is active.
-  bool e_stop_active_, last_e_stop_active_;
 };
 
 typedef boost::shared_ptr<ThorMangRobotHWSim> ThorMangRobotHWSimPtr;
 
 }
 
-#endif // #ifndef __GAZEBO_ROS_CONTROL_PLUGIN_DEFAULT_ROBOT_HW_SIM_H_
+#endif // #ifndef _GAZEBO_ROS_CONTROL___THOR_MANG_ROBOT_HW_SIM_H_
