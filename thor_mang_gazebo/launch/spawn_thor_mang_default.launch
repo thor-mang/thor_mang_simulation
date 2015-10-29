@@ -12,43 +12,47 @@
     args="-param robot_description
           -urdf
           -model robot_description
-          -J head_pan 0
-          -J head_tilt 0
-          -J l_ankle_pitch 0.607399277
-          -J l_ankle_roll -0.070400015
-          -J l_elbow -1.513516583
-          -J l_hip_pitch -0.789868906
-          -J l_hip_roll -0.074598838
-          -J l_hip_yaw 0.011298883
-          -J l_knee 1.189302819
-          -J l_shoulder_pitch 0.75316509
-          -J l_shoulder_roll -0.275504491
-          -J l_shoulder_yaw 0.0211927
-          -J l_wrist_roll 0
-          -J l_wrist_yaw1 -0.249898588
-          -J l_wrist_yaw2 0.816801445
-          -J r_ankle_pitch -0.607400579
-          -J r_ankle_roll 0.070400076
-          -J r_elbow 1.513511546
-          -J r_hip_pitch 0.78992388
-          -J r_hip_roll 0.074598608
-          -J r_hip_yaw -0.011301546
-          -J r_knee -1.18929649
-          -J r_shoulder_pitch -0.75318944
-          -J r_shoulder_roll 0.275497647
-          -J r_shoulder_yaw -0.02119781
-          -J r_wrist_roll 0
-          -J r_wrist_yaw1 0.249900152
-          -J r_wrist_yaw2 -0.816799906
-          -J waist_lidar 0
-          -J waist_pan 0
-          -J waist_tilt 0
-          -x 0
-          -y 0
-          -z 0.7876
+          -J     head_pan         -0.3664177997
+          -J     head_tilt         0.0212208868
+          -J     l_ankle_pitch     0.6061152668
+          -J     l_ankle_roll     -0.0704195354
+          -J     l_elbow          -0.75
+          -J     l_f0_j0           0.0
+          -J     l_f1_j0           0.0
+          -J     l_hip_pitch      -1.3585892181
+          -J     l_hip_roll       -0.0651375633
+          -J     l_hip_yaw         0.0013551477
+          -J     l_knee            1.1938564769
+          -J     l_shoulder_pitch -2.06
+          -J     l_shoulder_roll  -0.36
+          -J     l_shoulder_yaw    0.89
+          -J     l_wrist_roll      0.68
+          -J     l_wrist_yaw1      2.11
+          -J     l_wrist_yaw2     -1.55
+          -J     r_ankle_pitch     0.51
+          -J     r_ankle_roll      0.069956581
+          -J     r_elbow           1.9641521971
+          -J     r_f0_j0           1.9797571355
+          -J     r_f1_j0           1.8718261959
+          -J     r_hip_pitch       1.3619138991
+          -J     r_hip_roll        0.058231099
+          -J     r_hip_yaw         0.5114268501
+          -J     r_knee           -1.1
+          -J     r_shoulder_pitch  1.8622397729
+          -J     r_shoulder_roll   1.4387192418
+          -J     r_shoulder_yaw   -2.0823426605
+          -J     r_wrist_roll     -0.8443282784
+          -J     r_wrist_yaw1     -3.122187532
+          -J     r_wrist_yaw2      0.5426929853
+          -J     waist_lidar       0.6413654749
+          -J     waist_pan         0.0031093511
+          -J     waist_tilt        0.0533167772
+          -x -0.09
+          -y -0.35
+          -z 1.13
           -R 0
-          -P 0.20896
-          -Y 0"
+          -P 0
+          -Y 3.16"
     respawn="false" output="screen" />
 
   <!-- start robot state publisher -->
