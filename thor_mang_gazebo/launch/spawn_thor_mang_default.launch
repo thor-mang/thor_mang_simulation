@@ -12,48 +12,59 @@
     args="-param robot_description
           -urdf
           -model robot_description
-          -J     head_pan         -0.3664177997
-          -J     head_tilt         0.0212208868
-          -J     l_ankle_pitch     0.6061152668
-          -J     l_ankle_roll     -0.0704195354
-          -J     l_elbow          -0.75
-          -J     l_f0_j0           0.0
-          -J     l_f1_j0           0.0
-          -J     l_hip_pitch      -1.3585892181
-          -J     l_hip_roll       -0.0651375633
-          -J     l_hip_yaw         0.0013551477
-          -J     l_knee            1.1938564769
-          -J     l_shoulder_pitch -2.06
-          -J     l_shoulder_roll  -0.36
-          -J     l_shoulder_yaw    0.89
-          -J     l_wrist_roll      0.68
-          -J     l_wrist_yaw1      2.11
-          -J     l_wrist_yaw2     -1.55
-          -J     r_ankle_pitch     0.51
-          -J     r_ankle_roll      0.069956581
-          -J     r_elbow           1.9641521971
-          -J     r_f0_j0           1.9797571355
-          -J     r_f1_j0           1.8718261959
-          -J     r_hip_pitch       1.3619138991
-          -J     r_hip_roll        0.058231099
-          -J     r_hip_yaw         0.5114268501
-          -J     r_knee           -1.1
-          -J     r_shoulder_pitch  1.8622397729
-          -J     r_shoulder_roll   1.4387192418
-          -J     r_shoulder_yaw   -2.0823426605
-          -J     r_wrist_roll     -0.8443282784
-          -J     r_wrist_yaw1     -3.122187532
-          -J     r_wrist_yaw2      0.5426929853
-          -J     waist_lidar       0.6413654749
-          -J     waist_pan         0.0031093511
-          -J     waist_tilt        0.0533167772
-          -x -0.09
-          -y -0.35
-          -z 1.13
+          -J	head_pan	-0.0
+        -J	 head_tilt	0.0
+        -J	 l_ankle_pitch	0.605
+        -J	 l_ankle_roll	-0.070
+        -J	 l_elbow	-2.137
+        -J	 l_f0_j0	-0.011
+        -J	 l_f1_j0	0.007
+        -J	 l_hip_pitch	-1.384
+        -J	 l_hip_roll	-0.049
+        -J	 l_hip_yaw	-0.288
+        -J	 l_knee	1.200
+        -J	 l_shoulder_pitch	0.848
+        -J	 l_shoulder_roll	-2.105
+        -J	 l_shoulder_yaw	-0.598
+        -J	 l_wrist_roll	-0.942
+        -J	 l_wrist_yaw1	2.972
+        -J	 l_wrist_yaw2	-0.327
+        -J	 r_ankle_pitch	0.510
+        -J	 r_ankle_roll	-0.75
+        -J	 r_elbow	0.519
+        -J	 r_f0_j0	0.001
+        -J	 r_f1_j0	0.001
+        -J	 r_hip_pitch	1.400
+        -J	 r_hip_roll	0.049
+        -J	 r_hip_yaw	-0.140
+        -J	 r_knee	-1.105
+        -J	 r_shoulder_pitch	2.084
+        -J	 r_shoulder_roll	0.069
+        -J	 r_shoulder_yaw	0.007
+        -J	 r_wrist_roll	-0.605
+        -J	 r_wrist_yaw1	-3.211
+        -J	 r_wrist_yaw2	1.755
+        -J	 waist_lidar	-0.483
+        -J	 waist_pan	0.011
+        -J	 waist_tilt	0.069
+          -x -0.05
+          -y -0.13
+          -z 1.12
           -R 0
           -P 0
-          -Y 3.16"
+          -Y 2.9"
     respawn="false" output="screen" />
+
+
+
+<!--
+name: ['head_pan', 'head_tilt', 'l_ankle_pitch', 'l_ankle_roll', 'l_elbow', 'l_f0_j0', 'l_f1_j0', 'l_hip_pitch', 'l_hip_roll', 'l_hip_yaw', 'l_knee', 'l_shoulder_pitch', 'l_shoulder_roll', 'l_shoulder_yaw', 'l_wrist_roll', 'l_wrist_yaw1', 'l_wrist_yaw2', 'r_ankle_pitch', 'r_ankle_roll', 'r_elbow', 'r_f0_j0', 'r_f1_j0', 'r_hip_pitch', 'r_hip_roll', 'r_hip_yaw', 'r_knee', 'r_shoulder_pitch', 'r_shoulder_roll', 'r_shoulder_yaw', 'r_wrist_roll', 'r_wrist_yaw1', 'r_wrist_yaw2', 'waist_lidar', 'waist_pan', 'waist_tilt']
+position: [-0.36653437509106634, 0.025173554588081792, 0.6049124748248609, -0.07036069973084302, -2.1374904409469497, -0.010697067044331376, 0.007343709670065479, -1.3844213764419564, -0.04871948939273807, -0.2878096720396286, 1.1995150674004398, 0.8481364056092939, -2.104570335800931, -0.5983438100567682, -0.9416718104648547, 2.9719911253059976, -0.32742180015738676, 0.5097439170297209, 0.0696148604162925, 0.5186177892566555, 0.0012077275835791212, 0.0005794212193919179, 1.3996772422503847, 0.04850805291641347, -0.1404740033893379, -1.104819804644209, 2.0839330108843725, 0.06874352531537653, 0.007415457996311048, -0.6054902973331195, -3.2114984296526856, 1.7546326856787733, -0.4828393477679356, 0.01139666980284293, 0.06908131289351793]
+
+
+
+
+-->
 
   <!-- start robot state publisher -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen" >
