@@ -36,7 +36,7 @@
         -J	 r_f1_j0	0.001
         -J	 r_hip_pitch	1.400
         -J	 r_hip_roll	0.049
-        -J	 r_hip_yaw	-0.140
+        -J	 r_hip_yaw	-0.1
         -J	 r_knee	-1.105
         -J	 r_shoulder_pitch	2.084
         -J	 r_shoulder_roll	0.069
