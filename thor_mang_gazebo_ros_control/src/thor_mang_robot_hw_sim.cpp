@@ -68,6 +68,11 @@
 
 #include <thor_mang_gazebo_ros_control/thor_mang_robot_hw_sim.h>
 
+double clamp(const double val, const double min_val, const double max_val)
+{
+  return std::min(std::max(val, min_val), max_val);
+}
+
 namespace gazebo_ros_control
 {
 
@@ -237,6 +242,112 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
      imuMsg.orientation_covariance[4] = -1;
    }
   */
+}
+
+void ThorMangRobotHWSim::writeSim(ros::Time time, ros::Duration period)
+{
+  // If the E-stop is active, joints controlled by position commands will maintain their positions.
+  if (e_stop_active_)
+  {
+    if (!last_e_stop_active_)
+    {
+      last_joint_position_command_ = joint_position_;
+      last_e_stop_active_ = true;
+    }
+    joint_position_command_ = last_joint_position_command_;
+  }
+  else
+  {
+    last_e_stop_active_ = false;
+  }
+
+  ej_sat_interface_.enforceLimits(period);
+  ej_limits_interface_.enforceLimits(period);
+  pj_sat_interface_.enforceLimits(period);
+  pj_limits_interface_.enforceLimits(period);
+  vj_sat_interface_.enforceLimits(period);
+  vj_limits_interface_.enforceLimits(period);
+
+  for(unsigned int j=0; j < n_dof_; j++)
+  {
+    switch (joint_control_methods_[j])
+    {
+      case EFFORT:
+        {
+                if ((joint_names_[j] == "r_f0_j0") || (joint_names_[j] == "r_f1_j0") || (joint_names_[j] == "l_f0_j0") || (joint_names_[j] == "l_f1_j0"))
+                {
+                        //Simulation is done by VT_Hand Plugin
+                }
+                else 
+                {
+                        const double effort = e_stop_active_ ? 0 : joint_effort_command_[j];
+                        sim_joints_[j]->SetForce(0, effort);
+                }
+
+        }
+        break;
+
+      case POSITION:
+        {
+                if ((joint_names_[j] == "r_f0_j0") || (joint_names_[j] == "r_f1_j0") || (joint_names_[j] == "l_f0_j0") || (joint_names_[j] == "l_f1_j0"))
+                {
+                        //Simulation is done by VT_Hand Plugin
+                }
+                else 
+                {
+                        #if GAZEBO_MAJOR_VERSION >= 4
+                        sim_joints_[j]->SetPosition(0, joint_position_command_[j]);
+                        #else
+                        sim_joints_[j]->SetAngle(0, joint_position_command_[j]);
+                        #endif
+                }
+        }
+        break;
+
+      case POSITION_PID:
+        {
+          double error;
+          switch (joint_types_[j])
+          {
+            case urdf::Joint::REVOLUTE:
+              angles::shortest_angular_distance_with_limits(joint_position_[j],
+                                                            joint_position_command_[j],
+                                                            joint_lower_limits_[j],
+                                                            joint_upper_limits_[j],
+                                                            error);
+              break;
+            case urdf::Joint::CONTINUOUS:
+              error = angles::shortest_angular_distance(joint_position_[j],
+                                                        joint_position_command_[j]);
+              break;
+            default:
+              error = joint_position_command_[j] - joint_position_[j];
+          }
+
+          const double effort_limit = joint_effort_limits_[j];
+          const double effort = clamp(pid_controllers_[j].computeCommand(error, period),
+                                      -effort_limit, effort_limit);
+          sim_joints_[j]->SetForce(0, effort);
+        }
+        break;
+
+      case VELOCITY:
+        sim_joints_[j]->SetVelocity(0, e_stop_active_ ? 0 : joint_velocity_command_[j]);
+        break;
+
+      case VELOCITY_PID:
+        double error;
+        if (e_stop_active_)
+          error = -joint_velocity_[j];
+        else
+          error = joint_velocity_command_[j] - joint_velocity_[j];
+        const double effort_limit = joint_effort_limits_[j];
+        const double effort = clamp(pid_controllers_[j].computeCommand(error, period),
+                                    -effort_limit, effort_limit);
+        sim_joints_[j]->SetForce(0, effort);
+        break;
+    }
+  }
 }
 
 }

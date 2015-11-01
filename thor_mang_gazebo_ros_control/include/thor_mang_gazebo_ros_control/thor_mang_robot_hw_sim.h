@@ -130,6 +130,7 @@ public:
     std::vector<transmission_interface::TransmissionInfo> transmissions);
 
   virtual void readSim(ros::Time time, ros::Duration period);
+  virtual void writeSim(ros::Time time, ros::Duration period);
 
 protected:
 
@@ -165,7 +166,6 @@ protected:
   double force_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   double torque_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   gazebo::physics::JointPtr ft_joints_[MAXIMUM_NUMBER_OF_FT_SENSORS];
-
 };
 
 typedef boost::shared_ptr<ThorMangRobotHWSim> ThorMangRobotHWSimPtr;
