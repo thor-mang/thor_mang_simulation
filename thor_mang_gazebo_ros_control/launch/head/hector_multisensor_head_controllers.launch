@@ -2,7 +2,7 @@
 
 <launch>
 
-   <rosparam file="$(find thor_mang_ros_control)/config/thor_mang_velocity_controllers.yaml" command="load" />
+   <rosparam file="$(find thor_mang_gazebo_ros_control)/config/thor_mang_velocity_controllers.yaml" command="load" />
 
   <arg name="namespace" default="/thor_mang"/>
 
@@ -11,9 +11,12 @@
     args="head_lidar_controller"/>
   
    <!-- convert joint states to TF transforms for rviz, etc -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+ <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
     respawn="false" output="screen">
     <remap from="/joint_states" to="/thor_mang/joint_states" />
   </node>   
-
+  -->
+  
+    <!-- Start the spinning of the head lidar -->
+  <node name="set_head_lidar_velocity" pkg="rostopic" type="rostopic" output="screen" args="pub -r-once /thor_mang/head_lidar_controller/command std_msgs/Float64 'data: 0.6'"/>
 </launch>
