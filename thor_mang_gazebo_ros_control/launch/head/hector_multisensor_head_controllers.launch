@@ -8,7 +8,7 @@
 
   <!-- load position controllers -->
   <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner" ns="$(arg namespace)" respawn="false" output="screen"
-    args="head_lidar_controller"/>
+    args="--stopped head_lidar_controller"/>
   
    <!-- convert joint states to TF transforms for rviz, etc -->
  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
