@@ -5,17 +5,16 @@
    <rosparam file="$(find thor_mang_gazebo_ros_control)/config/thor_mang_velocity_controllers.yaml" command="load" />
 
   <arg name="namespace" default="/thor_mang"/>
-
+  
+  <!-- Script to start the stopped controller after waiting for the end of the initialization-->
+   <node name    = "start_head_controller"
+        pkg     = "thor_vt_hand_ros_control"
+        type    = "start_controller_script"
+        args    = "head_lidar_controller"  />
+   
   <!-- load position controllers -->
   <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner" ns="$(arg namespace)" respawn="false" output="screen"
-    args="head_lidar_controller"/>
-  
-   <!-- convert joint states to TF transforms for rviz, etc -->
- <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-    respawn="false" output="screen">
-    <remap from="/joint_states" to="/thor_mang/joint_states" />
-  </node>   
-  -->
+    args="--stopped head_lidar_controller"/>
   
     <!-- Start the spinning of the head lidar -->
   <node name="set_head_lidar_velocity" pkg="rostopic" type="rostopic" output="screen" args="pub -r 0.1 /thor_mang/head_lidar_controller/command std_msgs/Float64 'data: 0.6'"/>
