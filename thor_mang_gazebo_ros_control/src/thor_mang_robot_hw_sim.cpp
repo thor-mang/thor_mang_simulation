@@ -122,10 +122,21 @@ bool ThorMangRobotHWSim::initSim(
 
     ft_joints_[sensorIndex]->SetProvideFeedback(true);
 
-    //hardware_interface::ForceTorqueSensorHandle force_torque_sensor_handle_compensated(ftSensorUIDs[sensorIndex], ftSensorUIDs[sensorIndex], force_compensated[sensorIndex], torque_compensated[sensorIndex]);
-    //force_torque_sensor_interface.registerHandle(force_torque_sensor_handle_compensated);
+    hardware_interface::ForceTorqueSensorHandle force_torque_sensor_handle_compensated(ftSensorUIDs[sensorIndex], ftSensorUIDs[sensorIndex], force_compensated[sensorIndex], torque_compensated[sensorIndex]);
+    ft_interface_.registerHandle(force_torque_sensor_handle_compensated);
   }
   registerInterface(&ft_interface_);
+
+  // load compensation data from parameter server
+  for (unsigned int sensorIndex = 0; sensorIndex < MAXIMUM_NUMBER_OF_FT_SENSORS; sensorIndex++)
+  {
+    ros::NodeHandle nh(ftSensorUIDs[sensorIndex]);
+    if (!(ft_compensation[sensorIndex].loadMassComBias(nh) && ft_compensation[sensorIndex].loadHandToSensorOffset(nh, "sensor_offset"))) {
+      ROS_WARN_STREAM("Couldn't load complete ft sensor compensation data for " << ftSensorUIDs[sensorIndex] << " in " << nh.getNamespace() << ".");
+    }
+    ft_compensation[sensorIndex].initGravityPublisher(ftSensorUIDs[sensorIndex] + "_gravity", ftSensorUIDs[sensorIndex]);
+    ee_publisher[sensorIndex] = nh.advertise<geometry_msgs::PoseStamped>("pose", 1000);
+   }
 
   return true;
 }
@@ -157,6 +168,46 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
     torque_raw[sensorIndex][0] = torque.x; //+ this->GaussianKernel(0, this->gaussian_noise_);
     torque_raw[sensorIndex][1] = torque.y; //+ this->GaussianKernel(0, this->gaussian_noise_);
     torque_raw[sensorIndex][2] = torque.z; //+ this->GaussianKernel(0, this->gaussian_noise_);
+
+    // FT Compensation
+    gazebo::math::Pose sensor_pose = ft_joints_[sensorIndex]->GetWorldPose();
+    gazebo::math::Matrix3 sensor_rot = sensor_pose.rot.GetAsMatrix3();
+    Eigen::Matrix3d eigen_rot;
+    for (unsigned int row=0; row < 3; row++) {
+      for (unsigned int col=0; col < 3; col++) {
+        eigen_rot(row, col) = sensor_rot[row][col];
+      }
+    }
+
+    geometry_msgs::PoseStamped pose_msg;
+    pose_msg.header.frame_id = ftSensorUIDs[sensorIndex];
+    pose_msg.header.stamp = ros::Time::now();
+    pose_msg.pose.position.x = sensor_pose.pos.x;
+    pose_msg.pose.position.y = sensor_pose.pos.y;
+    pose_msg.pose.position.z = sensor_pose.pos.z;
+    pose_msg.pose.orientation.x = sensor_pose.rot.x;
+    pose_msg.pose.orientation.y = sensor_pose.rot.y;
+    pose_msg.pose.orientation.z = sensor_pose.rot.z;
+    pose_msg.pose.orientation.w = sensor_pose.rot.w;
+    ee_publisher[sensorIndex].publish(pose_msg);
+
+    ft_compensation[sensorIndex].setWorldGripperRotation(eigen_rot);
+    FTCompensation::Vector6d ft_raw;
+    FTCompensation::Vector6d ft_compensated;
+
+    ft_raw[0] = force_raw[sensorIndex][0];
+    ft_raw[1] = force_raw[sensorIndex][1];
+    ft_raw[2] = force_raw[sensorIndex][2];
+    ft_raw[3] = torque_raw[sensorIndex][0];
+    ft_raw[4] = torque_raw[sensorIndex][1];
+    ft_raw[5] = torque_raw[sensorIndex][2];
+    ft_compensation[sensorIndex].zeroAndCompensate(ft_raw, ft_compensated);
+    force_compensated[sensorIndex][0] = ft_compensated[0];
+    force_compensated[sensorIndex][1] = ft_compensated[1];
+    force_compensated[sensorIndex][2] = ft_compensated[2];
+    torque_compensated[sensorIndex][0] = ft_compensated[3];
+    torque_compensated[sensorIndex][1] = ft_compensated[4];
+    torque_compensated[sensorIndex][2] = ft_compensated[5];
   }
 
   // IMU (largely copied from hector_gazebo_ros_imu)

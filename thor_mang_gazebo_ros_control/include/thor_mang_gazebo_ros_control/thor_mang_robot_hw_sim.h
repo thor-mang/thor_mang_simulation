@@ -98,6 +98,10 @@
 // URDF
 #include <urdf/model.h>
 
+//FT Sensor Gravity Compensation
+#include <vigir_force_torque_compensation_lib/compensation.h>
+#include <geometry_msgs/PoseStamped.h>
+
 
 
 namespace gazebo_ros_control
@@ -164,7 +168,11 @@ protected:
   std::string ftSensorJoints[MAXIMUM_NUMBER_OF_FT_SENSORS];
   double force_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   double torque_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
+  double force_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
+  double torque_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   gazebo::physics::JointPtr ft_joints_[MAXIMUM_NUMBER_OF_FT_SENSORS];
+  FTCompensation::Compensation ft_compensation[MAXIMUM_NUMBER_OF_FT_SENSORS];
+  ros::Publisher ee_publisher[MAXIMUM_NUMBER_OF_FT_SENSORS];
 
 };
 

@@ -19,6 +19,9 @@
     <arg name="args" value="-u" />
   </include>
   -->
+  
+  <!-- Load ft-sensor compensation data -->
+  <rosparam file="$(find vigir_force_torque_compensation_lib)/config/thor_vt_data_sim.yaml" command="load" />
 
   <include file="$(find thor_mang_gazebo)/launch/spawn_thor_mang_default.launch"/>
   
