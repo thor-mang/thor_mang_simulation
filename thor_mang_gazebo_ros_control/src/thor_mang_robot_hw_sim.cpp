@@ -83,6 +83,10 @@ bool ThorMangRobotHWSim::initSim(
     return false;
   }
 
+  /** save joints */
+  joints_ = parent_model->GetJoints();
+  joint_positions_.resize(joints_.size(), 0);
+
   /** register sensors */
   // IMU
   imu_data.name = "pelvis_imu";
@@ -134,9 +138,10 @@ bool ThorMangRobotHWSim::initSim(
     if (!(ft_compensation[sensorIndex].loadMassComBias(nh) && ft_compensation[sensorIndex].loadHandToSensorOffset(nh, "sensor_offset"))) {
       ROS_WARN_STREAM("Couldn't load complete ft sensor compensation data for " << ftSensorUIDs[sensorIndex] << " in " << nh.getNamespace() << ".");
     }
-    ft_compensation[sensorIndex].initGravityPublisher(ftSensorUIDs[sensorIndex] + "_gravity", ftSensorUIDs[sensorIndex]);
-    ee_publisher[sensorIndex] = nh.advertise<geometry_msgs::PoseStamped>("pose", 1000);
+    ft_compensation[sensorIndex].initGravityPublisher(robot_namespace + "/" + ftSensorUIDs[sensorIndex], ftSensorUIDs[sensorIndex]);
    }
+
+  transforms_.init();
 
   return true;
 }
@@ -146,69 +151,16 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
   // Call parent read (dealing with joint interfaces)
   DefaultRobotHWSim::readSim(time, period);
 
-  // FT-Sensors
-  for (unsigned int sensorIndex = 0; sensorIndex < MAXIMUM_NUMBER_OF_FT_SENSORS; sensorIndex++)
-  {
-    gazebo::physics::JointWrench wrench;
-    gazebo::math::Vector3 torque;
-    gazebo::math::Vector3 force;
-
-    // FIXME: Should include options for different frames and measure directions
-    // E.g: https://bitbucket.org/osrf/gazebo/raw/default/gazebo/sensors/ForceTorqueSensor.hh
-    // Get force torque at the joint
-    // The wrench is reported in the CHILD <frame>
-    // The <measure_direction> is child_to_parent
-    wrench = ft_joints_[sensorIndex]->GetForceTorque(0);
-    force = wrench.body2Force;
-    torque = wrench.body2Torque;
-
-    force_raw[sensorIndex][0] = force.x; //+ this->GaussianKernel(0, this->gaussian_noise_);
-    force_raw[sensorIndex][1] = force.y; //+ this->GaussianKernel(0, this->gaussian_noise_);
-    force_raw[sensorIndex][2] = force.z; //+ this->GaussianKernel(0, this->gaussian_noise_);
-    torque_raw[sensorIndex][0] = torque.x; //+ this->GaussianKernel(0, this->gaussian_noise_);
-    torque_raw[sensorIndex][1] = torque.y; //+ this->GaussianKernel(0, this->gaussian_noise_);
-    torque_raw[sensorIndex][2] = torque.z; //+ this->GaussianKernel(0, this->gaussian_noise_);
-
-    // FT Compensation
-    gazebo::math::Pose sensor_pose = ft_joints_[sensorIndex]->GetWorldPose();
-    gazebo::math::Matrix3 sensor_rot = sensor_pose.rot.GetAsMatrix3();
-    Eigen::Matrix3d eigen_rot;
-    for (unsigned int row=0; row < 3; row++) {
-      for (unsigned int col=0; col < 3; col++) {
-        eigen_rot(row, col) = sensor_rot[row][col];
-      }
-    }
-
-    geometry_msgs::PoseStamped pose_msg;
-    pose_msg.header.frame_id = ftSensorUIDs[sensorIndex];
-    pose_msg.header.stamp = ros::Time::now();
-    pose_msg.pose.position.x = sensor_pose.pos.x;
-    pose_msg.pose.position.y = sensor_pose.pos.y;
-    pose_msg.pose.position.z = sensor_pose.pos.z;
-    pose_msg.pose.orientation.x = sensor_pose.rot.x;
-    pose_msg.pose.orientation.y = sensor_pose.rot.y;
-    pose_msg.pose.orientation.z = sensor_pose.rot.z;
-    pose_msg.pose.orientation.w = sensor_pose.rot.w;
-    ee_publisher[sensorIndex].publish(pose_msg);
-
-    ft_compensation[sensorIndex].setWorldGripperRotation(eigen_rot);
-    FTCompensation::Vector6d ft_raw;
-    FTCompensation::Vector6d ft_compensated;
-
-    ft_raw[0] = force_raw[sensorIndex][0];
-    ft_raw[1] = force_raw[sensorIndex][1];
-    ft_raw[2] = force_raw[sensorIndex][2];
-    ft_raw[3] = torque_raw[sensorIndex][0];
-    ft_raw[4] = torque_raw[sensorIndex][1];
-    ft_raw[5] = torque_raw[sensorIndex][2];
-    ft_compensation[sensorIndex].zeroAndCompensate(ft_raw, ft_compensated);
-    force_compensated[sensorIndex][0] = ft_compensated[0];
-    force_compensated[sensorIndex][1] = ft_compensated[1];
-    force_compensated[sensorIndex][2] = ft_compensated[2];
-    torque_compensated[sensorIndex][0] = ft_compensated[3];
-    torque_compensated[sensorIndex][1] = ft_compensated[4];
-    torque_compensated[sensorIndex][2] = ft_compensated[5];
+  // Transforms
+  for (unsigned int i = 0; i < joints_.size(); i++) {
+    // Gazebo has an interesting API...
+    // Only works for revolute joints!
+    joint_positions_[i] += angles::shortest_angular_distance(joint_positions_[i],
+                            joints_[i]->GetAngle(0).Radian());
+    transforms_.updateState(joints_[i]->GetName(), joint_positions_[i]);
   }
+
+
 
   // IMU (largely copied from hector_gazebo_ros_imu)
   double dt = period.toSec();
@@ -277,6 +229,10 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
   imu_linear_acceleration[1] = accel.y;
   imu_linear_acceleration[2] = accel.z;
 
+  Eigen::Affine3d imu_orient(Eigen::Quaternion<double>(imu_orientation[3], imu_orientation[0], imu_orientation[1], imu_orientation[2]));
+  imu_orient.translation()  = Eigen::Vector3d::Zero();
+  transforms_.updateRootTransform(imu_orient);
+
   /*
    // fill in covariance matrix
    imuMsg.orientation_covariance[8] = yawModel.gaussian_noise*yawModel.gaussian_noise;
@@ -288,6 +244,50 @@ void ThorMangRobotHWSim::readSim(ros::Time time, ros::Duration period)
      imuMsg.orientation_covariance[4] = -1;
    }
   */
+
+  // FT-Sensors
+  for (unsigned int sensorIndex = 0; sensorIndex < MAXIMUM_NUMBER_OF_FT_SENSORS; sensorIndex++)
+  {
+    gazebo::physics::JointWrench wrench;
+    gazebo::math::Vector3 torque;
+    gazebo::math::Vector3 force;
+
+    // FIXME: Should include options for different frames and measure directions
+    // E.g: https://bitbucket.org/osrf/gazebo/raw/default/gazebo/sensors/ForceTorqueSensor.hh
+    // Get force torque at the joint
+    // The wrench is reported in the CHILD <frame>
+    // The <measure_direction> is child_to_parent
+    wrench = ft_joints_[sensorIndex]->GetForceTorque(0);
+    force = wrench.body2Force;
+    torque = wrench.body2Torque;
+
+    force_raw[sensorIndex][0] = force.x; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    force_raw[sensorIndex][1] = force.y; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    force_raw[sensorIndex][2] = force.z; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    torque_raw[sensorIndex][0] = torque.x; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    torque_raw[sensorIndex][1] = torque.y; //+ this->GaussianKernel(0, this->gaussian_noise_);
+    torque_raw[sensorIndex][2] = torque.z; //+ this->GaussianKernel(0, this->gaussian_noise_);
+
+    // FT Compensation
+    Eigen::Matrix3d world_gripper_rot = (transforms_.getRootTransform().rotation() * transforms_.getTransform(ftSensorUIDs[sensorIndex]).rotation()).inverse();
+    ft_compensation[sensorIndex].setWorldGripperRotation(world_gripper_rot);
+    FTCompensation::Vector6d ft_raw;
+    FTCompensation::Vector6d ft_compensated;
+
+    ft_raw[0] = force_raw[sensorIndex][0];
+    ft_raw[1] = force_raw[sensorIndex][1];
+    ft_raw[2] = force_raw[sensorIndex][2];
+    ft_raw[3] = torque_raw[sensorIndex][0];
+    ft_raw[4] = torque_raw[sensorIndex][1];
+    ft_raw[5] = torque_raw[sensorIndex][2];
+    ft_compensation[sensorIndex].zeroAndCompensate(ft_raw, ft_compensated);
+    force_compensated[sensorIndex][0] = ft_compensated[0];
+    force_compensated[sensorIndex][1] = ft_compensated[1];
+    force_compensated[sensorIndex][2] = ft_compensated[2];
+    torque_compensated[sensorIndex][0] = ft_compensated[3];
+    torque_compensated[sensorIndex][1] = ft_compensated[4];
+    torque_compensated[sensorIndex][2] = ft_compensated[5];
+  }
 }
 
 }

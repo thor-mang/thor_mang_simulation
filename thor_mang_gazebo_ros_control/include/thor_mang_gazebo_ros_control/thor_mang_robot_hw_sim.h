@@ -101,6 +101,7 @@
 //FT Sensor Gravity Compensation
 #include <vigir_force_torque_compensation_lib/compensation.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <robot_transforms/robot_transforms.h>
 
 
 
@@ -136,9 +137,13 @@ public:
   virtual void readSim(ros::Time time, ros::Duration period);
 
 protected:
-
   hardware_interface::ForceTorqueSensorInterface ft_interface_;
   hardware_interface::ImuSensorInterface         imu_interface_;
+
+  /// \brief save joint state
+  std::vector<gazebo::physics::JointPtr> joints_;
+  std::vector<double> joint_positions_;
+  robot_tools::RobotTransforms transforms_;
 
   // IMU related members
   hardware_interface::ImuSensorHandle::Data imu_data;
@@ -172,8 +177,6 @@ protected:
   double torque_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   gazebo::physics::JointPtr ft_joints_[MAXIMUM_NUMBER_OF_FT_SENSORS];
   FTCompensation::Compensation ft_compensation[MAXIMUM_NUMBER_OF_FT_SENSORS];
-  ros::Publisher ee_publisher[MAXIMUM_NUMBER_OF_FT_SENSORS];
-
 };
 
 typedef boost::shared_ptr<ThorMangRobotHWSim> ThorMangRobotHWSimPtr;
