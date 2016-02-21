@@ -14,9 +14,9 @@
             right_arm_traj_controller
             torso_traj_controller
 	    head_traj_controller
-            waist_lidar_controller
             left_leg_traj_controller
-            right_leg_traj_controller"/>
+            right_leg_traj_controller
+"/>
 
     <!-- convert joint states to TF transforms for rviz, etc -->
     <!--

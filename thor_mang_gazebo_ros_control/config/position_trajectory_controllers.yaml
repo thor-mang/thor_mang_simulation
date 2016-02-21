@@ -1,0 +1,216 @@
+# trajectory controllers ---------------------------------------
+#thor:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 125
+        
+  force_torque_sensor_controller:
+    type: force_torque_sensor_controller/ForceTorqueSensorController
+    publish_rate: 125
+    
+  imu_sensor_controller:
+    type: imu_sensor_controller/ImuSensorController
+    publish_rate: 125
+    
+  left_arm_traj_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - l_arm_sh_p1
+      - l_arm_sh_r
+      - l_arm_sh_p2
+      - l_arm_el_y
+      - l_arm_wr_r
+      - l_arm_wr_y
+      - l_arm_wr_p
+      
+    constraints:
+      goal_time: &goal_time_constraint 4.0
+      stopped_velocity_tolerance: 1.0
+      l_arm_sh_p1:
+        goal: &goal_pos_constraint 0.5
+        trajectory: &trajectory_pos_constraint 1.0
+      l_arm_sh_r:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint        
+      l_arm_sh_p2:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      l_arm_el_y:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint        
+      l_arm_wr_r:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      l_arm_wr_y:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      l_arm_wr_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+        
+        
+  right_arm_traj_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - r_arm_sh_p1
+      - r_arm_sh_r
+      - r_arm_sh_p2
+      - r_arm_el_y
+      - r_arm_wr_r
+      - r_arm_wr_y
+      - r_arm_wr_p
+      
+    constraints:
+      goal_time: *goal_time_constraint
+      stopped_velocity_tolerance: 1.0
+      r_arm_sh_p1:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      r_arm_sh_r:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      r_arm_sh_p2:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      r_arm_el_y:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint        
+      r_arm_wr_r:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      r_arm_wr_y:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      r_arm_wr_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+   
+
+  left_leg_traj_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - l_leg_hip_y
+      - l_leg_hip_r
+      - l_leg_hip_p
+      - l_leg_kn_p
+      - l_leg_an_p
+      - l_leg_an_r
+      
+    constraints:
+      goal_time: *goal_time_constraint
+      stopped_velocity_tolerance: 1.0
+      l_leg_hip_y:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      l_leg_hip_r:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint        
+      l_leg_hip_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      l_leg_kn_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint        
+      l_leg_an_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      l_leg_an_r:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+   
+
+  right_leg_traj_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - r_leg_hip_y
+      - r_leg_hip_r
+      - r_leg_hip_p
+      - r_leg_kn_p
+      - r_leg_an_p
+      - r_leg_an_r
+      
+    constraints:
+      goal_time: *goal_time_constraint
+      stopped_velocity_tolerance: 1.0
+      r_leg_hip_y:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      r_leg_hip_r:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint        
+      r_leg_hip_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      r_leg_kn_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint        
+      r_leg_an_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      r_leg_an_r:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+
+
+  torso_traj_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - torso_y
+      
+    constraints:
+      goal_time: *goal_time_constraint
+      stopped_velocity_tolerance: 1.0
+      torso_y:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+        
+  head_traj_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - head_y
+      - head_p
+      
+    constraints:
+      goal_time: *goal_time_constraint
+      head_y:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint
+      head_p:
+        goal: *goal_pos_constraint
+        trajectory: *trajectory_pos_constraint        
+        
+    stop_trajectory_duration: 1.0
+
+# Hands --------------------------------------------------
+  #left_hand_traj_controller:
+    #type: "position_controllers/JointTrajectoryController"
+    #joints:
+      #- l_arm_grip
+      #- l_arm_grip_1
+
+    #constraints:
+      #goal_time: *goal_time_constraint
+      #stopped_velocity_tolerance: 1.0
+      #l_arm_grip:
+        #goal: *goal_pos_constraint
+        #trajectory: *trajectory_pos_constraint
+      #l_arm_grip_1:
+        #goal: *goal_pos_constraint
+        #trajectory: *trajectory_pos_constraint
+
+
+  #right_hand_traj_controller:
+    #type: "position_controllers/JointTrajectoryController"
+    #joints:
+      #- r_arm_grip
+      #- r_arm_grip_1
+
+    #constraints:
+      #goal_time: *goal_time_constraint
+      #stopped_velocity_tolerance: 1.0
+      #r_arm_grip:
+        #goal: *goal_pos_constraint
+        #trajectory: *trajectory_pos_constraint
+      #r_arm_grip_1:
+        #goal: *goal_pos_constraint
+        #trajectory: *trajectory_pos_constraint
