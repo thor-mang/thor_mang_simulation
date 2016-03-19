@@ -3,7 +3,7 @@
 <launch>
   <group ns="/thor_mang">
     <!-- Load joint controller configurations from YAML file to parameter server -->
-    <rosparam file="$(find thor_mang_gazebo_ros_control)/config/position_trajectory_controllers.yaml" command="load" />
+    <rosparam file="$(find thor_mang_gazebo_ros_control)/config/default_controllers.yaml" command="load" />
 
     <!-- load the controllers -->
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
@@ -14,9 +14,9 @@
             right_arm_traj_controller
             torso_traj_controller
 	    head_traj_controller
+            waist_lidar_controller
             left_leg_traj_controller
-            right_leg_traj_controller
-"/>
+            right_leg_traj_controller"/>
 
     <!-- convert joint states to TF transforms for rviz, etc -->
     <!--
