@@ -5,49 +5,47 @@
   <param name="use_sim_time" value="true" />
 
   <!-- send the robot XML to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find thor_mang_description)/robots/$(optenv THOR_ROBOT_TYPE thor_mang)_tud_simple.urdf.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find robotis_humanoid_description)/urdf/robotis_humanoid.xacro'" />
 
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="spawn_robot" pkg="gazebo_ros" type="spawn_model"
     args="-param robot_description
           -urdf
           -model robot_description
-          -J head_pan 0
-          -J head_tilt 0
-          -J l_ankle_pitch 0.607399277
-          -J l_ankle_roll -0.070400015
-          -J l_elbow -1.513516583
-          -J l_hip_pitch -0.789868906
-          -J l_hip_roll -0.074598838
-          -J l_hip_yaw 0.011298883
-          -J l_knee 1.189302819
-          -J l_shoulder_pitch 0.75316509
-          -J l_shoulder_roll -0.275504491
-          -J l_shoulder_yaw 0.0211927
-          -J l_wrist_roll 0
-          -J l_wrist_yaw1 -0.249898588
-          -J l_wrist_yaw2 0.816801445
-          -J r_ankle_pitch -0.607400579
-          -J r_ankle_roll 0.070400076
-          -J r_elbow 1.513511546
-          -J r_hip_pitch 0.78992388
-          -J r_hip_roll 0.074598608
-          -J r_hip_yaw -0.011301546
-          -J r_knee -1.18929649
-          -J r_shoulder_pitch -0.75318944
-          -J r_shoulder_roll 0.275497647
-          -J r_shoulder_yaw -0.02119781
-          -J r_wrist_roll 0
-          -J r_wrist_yaw1 0.249900152
-          -J r_wrist_yaw2 -0.816799906
-          -J waist_lidar 0
-          -J waist_pan 0
-          -J waist_tilt 0
+          -J head_y 0
+          -J head_p 0
+          -J l_leg_an_p 0.55
+          -J l_leg_an_r -0.070400015
+          -J l_arm_el_y 0
+          -J l_leg_hip_p -0.789868906
+          -J l_leg_hip_r -0.074598838
+          -J l_leg_hip_y 0.011298883
+          -J l_leg_kn_p 1.189302819
+          -J l_arm_sh_p1 0
+          -J l_arm_sh_r 0.7
+          -J l_arm_sh_p2 0
+          -J l_arm_wr_r 0
+          -J l_arm_wr_y 0
+          -J l_arm_wr_p 0
+          -J r_leg_an_p -0.55
+          -J r_leg_an_r 0.070400076
+          -J r_arm_el_y 0
+          -J r_leg_hip_p 0.78992388
+          -J r_leg_hip_r 0.074598608
+          -J r_leg_hip_y -0.011301546
+          -J r_leg_kn_p -1.18929649
+          -J r_arm_sh_p1 0
+          -J r_arm_sh_r -0.7
+          -J r_arm_sh_p2 0
+          -J r_arm_wr_r 0
+          -J r_arm_wr_y 0
+          -J r_arm_wr_p 0
+          -J torso_y 0
           -x 0
           -y 0
-          -z 0.7876
+          -z 0.71
           -R 0
-          -P 0.20896
+          -P 0.15
           -Y 0"
     respawn="false" output="screen" />
 

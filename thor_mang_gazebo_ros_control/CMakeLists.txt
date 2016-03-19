@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   hector_gazebo_plugins
   vigir_force_torque_compensation_lib
   robot_transforms
+  dynamixel_pro_controller
 )
 
 # Depend on system install of Gazebo 
@@ -23,6 +24,7 @@ catkin_package(
     hector_gazebo_plugins
     vigir_force_torque_compensation_lib
     robot_transforms
+    dynamixel_pro_controller
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} thor_mang_robot_hw_sim
   DEPENDS gazebo

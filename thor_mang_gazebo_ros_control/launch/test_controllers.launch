@@ -6,13 +6,19 @@
     <rosparam file="$(find thor_mang_gazebo_ros_control)/config/test_controllers.yaml" command="load" />
 
     <!-- load the controllers -->
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" 
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
       args="joint_state_controller
-            l_arm_shoulder_pitch_joint_controller"/>
+            dynamixel_traj_controller
+"/>
 
     <!-- convert joint states to TF transforms for rviz, etc -->
-<!--    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
-      <remap from="/joint_states" to="/rrbot/joint_states" />
-    </node>-->
+    <!--
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+      <remap from="/joint_states" to="/thor_mang/joint_states" />
+    </node>
+    -->
+    
   </group>
+  
+  
 </launch>
