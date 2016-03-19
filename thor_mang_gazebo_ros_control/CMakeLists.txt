@@ -7,6 +7,9 @@ find_package(catkin REQUIRED COMPONENTS
   controller_manager
   gazebo_ros_control
   hector_gazebo_plugins
+  vigir_force_torque_compensation_lib
+  robot_transforms
+  dynamixel_pro_controller
 )
 
 # Depend on system install of Gazebo 
@@ -19,6 +22,9 @@ catkin_package(
     controller_manager
     gazebo_ros_control
     hector_gazebo_plugins
+    vigir_force_torque_compensation_lib
+    robot_transforms
+    dynamixel_pro_controller
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} thor_mang_robot_hw_sim
   DEPENDS gazebo
@@ -35,7 +41,10 @@ include_directories(include
 #add_library(${PROJECT_NAME} src/thor_mang_gazebo_ros_control_plugin.cpp)
 #target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
-add_library(thor_mang_robot_hw_sim src/thor_mang_robot_hw_sim.cpp)
+add_library(thor_mang_robot_hw_sim 
+  src/thor_mang_robot_hw_sim.cpp
+  include/${PROJECT_NAME}/thor_mang_robot_hw_sim.h
+ )
 target_link_libraries(thor_mang_robot_hw_sim ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 ## Install

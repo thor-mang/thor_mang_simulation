@@ -1,0 +1,18 @@
+# trajectory controllers ---------------------------------------
+#thor:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 125
+    
+  dynamixel_traj_controller:
+    type: "velocity_controllers/JointTrajectoryController"
+    joints:
+      - dynamixel_joint
+      
+    constraints:
+      goal_time: &goal_time_constraint 4.0
+      stopped_velocity_tolerance: 1.0
+      dynamixel_joint:
+        goal: &goal_pos_constraint 0.5
+        trajectory: &trajectory_pos_constraint 1.0
+        

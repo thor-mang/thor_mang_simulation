@@ -1,0 +1,23 @@
+r_hand:
+   bias: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+   gripper_com: [0.0, 0.0, 0.0]
+   gripper_mass: 1.03
+   sensor_offset: [0.0, 0.0, 0.0]
+
+l_hand:
+   bias: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+   gripper_com: [0.0, 0.0, 0.0]
+   gripper_mass: 1.03
+   sensor_offset: [0.0, 0.0, 0.0]
+
+r_foot:
+   bias: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+   gripper_com: [0.0, 0.0, 0.0]
+   gripper_mass: 0.0
+   sensor_offset: [0.0, 0.0, 0.0]
+
+l_foot:
+   bias: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+   gripper_com: [0.0, 0.0, 0.0]
+   gripper_mass: 0.0
+   sensor_offset: [0.0, 0.0, 0.0]

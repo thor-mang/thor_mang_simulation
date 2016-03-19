@@ -70,7 +70,7 @@
 #define _GAZEBO_ROS_CONTROL___THOR_MANG_ROBOT_HW_SIM_H_
 
 // ros_control
-#include <control_toolbox/pid.h>
+//#include <control_toolbox/pid.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/force_torque_sensor_interface.h>
 #include <hardware_interface/imu_sensor_interface.h>
@@ -97,6 +97,14 @@
 
 // URDF
 #include <urdf/model.h>
+
+//FT Sensor Gravity Compensation
+#include <vigir_force_torque_compensation_lib/compensation.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <robot_transforms/robot_transforms.h>
+
+//Dynamixel Pro
+#include <dynamixel_pro_controller/dynamixel_pro_controller.h>
 
 
 
@@ -133,9 +141,13 @@ public:
   virtual void writeSim(ros::Time time, ros::Duration period);
 
 protected:
-
   hardware_interface::ForceTorqueSensorInterface ft_interface_;
   hardware_interface::ImuSensorInterface         imu_interface_;
+
+  /// \brief save joint state
+  std::vector<gazebo::physics::JointPtr> joints_;
+  std::vector<double> joint_positions_;
+  robot_tools::RobotTransforms transforms_;
 
   // IMU related members
   hardware_interface::ImuSensorHandle::Data imu_data;
@@ -165,7 +177,13 @@ protected:
   std::string ftSensorJoints[MAXIMUM_NUMBER_OF_FT_SENSORS];
   double force_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   double torque_raw[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
+  double force_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
+  double torque_compensated[MAXIMUM_NUMBER_OF_FT_SENSORS][3];
   gazebo::physics::JointPtr ft_joints_[MAXIMUM_NUMBER_OF_FT_SENSORS];
+  FTCompensation::Compensation ft_compensation[MAXIMUM_NUMBER_OF_FT_SENSORS];
+
+  //Dynamixel Pro
+  std::vector<control_toolbox::DynamixelPro> dynamixel_pro_controllers_;
 };
 
 typedef boost::shared_ptr<ThorMangRobotHWSim> ThorMangRobotHWSimPtr;
