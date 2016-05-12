@@ -5,9 +5,6 @@ project(thor_mang_gazebo)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  gazebo_ros
-  thor_mang_description
-  xacro
 )
 
 ## System dependencies are found with CMake's conventions
