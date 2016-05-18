@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-  <include  file = "$(find thor_mang_gazebo_ros_control)/launch/thor_mang_default_controllers.launch" />  
-  <include  file = "$(find thor_mang_gazebo_ros_control)/launch/hands/$(optenv RIGHT_HAND_TYPE r_stump)_controllers.launch" />
-  <include  file = "$(find thor_mang_gazebo_ros_control)/launch/hands/$(optenv LEFT_HAND_TYPE  l_stump)_controllers.launch"/>
-</launch>
