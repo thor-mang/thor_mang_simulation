@@ -22,23 +22,20 @@
     <arg name="headless" value="$(arg headless)"/>
   </include>
 
-  <!-- Load the URDF into the ROS Parameter Server -->
-  <param name="robot_description"
-	 command="$(find xacro)/xacro.py '$(find thormang3_description)/urdf/thormang3.xacro' pinned:=$(arg pinned)" />
-
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
 	args="-urdf -model thormang3 -z 0.9 -param robot_description"/>
 
-  <!-- ros_control robotis humanoid launch file -->
+  <!-- Gazebo ros_control launch file -->
   <group if ="$(arg position_controller)">
-  	<include file="$(find thormang3_gazebo)/launch/position_controller.launch" />
+    <include file="$(find thormang3_gazebo)/launch/position_controller.launch" />
   </group>
-  
-  <!-- THORMANG3 Manager -->
-  <include file="$(find thormang3_manager)/launch/thormang3_manager.launch">
+
+  <!-- Start robot basics -->
+  <include file="$(find thor_mang_onboard_launch)/launch/robot_basics.launch">
     <arg name="use_imu" value="false"/>
-    <arg name="use_lidar" value="false" />  
+    <arg name="use_lidar" value="false" />
     <arg name="gazebo" value="true" />
+    <arg name="pinned" value="$(arg pinned)" />
   </include>
 </launch>
