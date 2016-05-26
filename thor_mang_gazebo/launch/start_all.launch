@@ -1,39 +1,30 @@
 <?xml version="1.0" ?>
 <launch>
-  <arg name="position_controller" default="true"/>
-
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
-  <arg name="world_name" default="$(find thormang3_gazebo)/worlds/empty.world"/>
-  <arg name="pinned" default="false"/>
-  <arg name="paused" default="true"/>
-  <arg name="use_sim_time" default="true"/>
-  <arg name="gui" default="true"/>
-  <arg name="headless" default="false"/>
-  <arg name="debug" default="false"/>
-  
-  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+  <arg name="position_controller" default="true" />
+  <arg name="world_name" default="$(find thormang3_gazebo)/worlds/empty.world" />
+  <arg name="pinned" default="false" />
+  <arg name="paused" default="true" />
+  <arg name="use_sim_time" default="true" />
+  <arg name="gui" default="true" />
+  <arg name="headless" default="false" />
+  <arg name="debug" default="false" />
+
+  <!-- Start Gazebo -->
+  <include file="$(find thor_mang_gazebo)/launch/gazebo.launch">
+    <arg name="position_controller" value="$(arg position_controller)" />
     <arg name="world_name" value="$(arg world_name)" />
-    <arg name="physics" value="ode" />
-    <arg name="debug" value="$(arg debug)" />
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="use_sim_time" value="$(arg use_sim_time)" />
     <arg name="gui" value="$(arg gui)" />
-    <arg name="paused" value="$(arg paused)"/>
-    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
-    <arg name="headless" value="$(arg headless)"/>
+    <arg name="headless" value="$(arg headless)" />
+    <arg name="debug" value="$(arg debug)" />
   </include>
-
-  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	args="-urdf -model thormang3 -z 0.9 -param robot_description"/>
-
-  <!-- Gazebo ros_control launch file -->
-  <group if ="$(arg position_controller)">
-    <include file="$(find thormang3_gazebo)/launch/position_controller.launch" />
-  </group>
 
   <!-- Start robot basics -->
   <include file="$(find thor_mang_onboard_launch)/launch/robot_basics.launch">
-    <arg name="use_imu" value="false"/>
+    <arg name="robot_name" value="johnny5" />
+    <arg name="use_imu" value="false" />
     <arg name="use_lidar" value="false" />
     <arg name="gazebo" value="true" />
     <arg name="pinned" value="$(arg pinned)" />
