@@ -9,6 +9,8 @@
   <arg name="gui" default="true" />
   <arg name="headless" default="false" />
   <arg name="debug" default="false" />
+  <arg name="hand_type_0" default="$(optenv HAND_TYPE_0 no_hand)" />  
+  <arg name="hand_type_1" default="$(optenv HAND_TYPE_1 no_hand)" />
 
   <!-- Start Gazebo -->
   <include file="$(find thor_mang_gazebo)/launch/gazebo.launch">
@@ -28,5 +30,7 @@
     <arg name="use_lidar" value="false" />
     <arg name="gazebo" value="true" />
     <arg name="pinned" value="$(arg pinned)" />
+    <arg name="hand_type_0" value="$(arg hand_type_0)" />
+    <arg name="hand_type_1" value="$(arg hand_type_1)" />
   </include>
 </launch>
