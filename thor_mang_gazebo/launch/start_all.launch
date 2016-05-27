@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <launch>
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="robot_name" default="johnny5" />
   <arg name="position_controller" default="true" />
   <arg name="world_name" default="$(find thormang3_gazebo)/worlds/empty.world" />
   <arg name="pinned" default="false" />
@@ -14,6 +15,7 @@
 
   <!-- Start Gazebo -->
   <include file="$(find thor_mang_gazebo)/launch/gazebo.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
     <arg name="position_controller" value="$(arg position_controller)" />
     <arg name="world_name" value="$(arg world_name)" />
     <arg name="paused" value="$(arg paused)" />
@@ -21,11 +23,12 @@
     <arg name="gui" value="$(arg gui)" />
     <arg name="headless" value="$(arg headless)" />
     <arg name="debug" value="$(arg debug)" />
+    <arg name="pinned" value="$(arg pinned)" />
   </include>
 
   <!-- Start robot basics -->
   <include file="$(find thor_mang_onboard_launch)/launch/robot_basics.launch">
-    <arg name="robot_name" value="johnny5" />
+    <arg name="robot_name" value="$(arg robot_name)" />
     <arg name="use_imu" value="false" />
     <arg name="use_lidar" value="false" />
     <arg name="gazebo" value="true" />
