@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <launch>
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="robot_name" default="thormang3" />
   <arg name="position_controller" default="true" />
   <arg name="world_name" default="$(find thormang3_gazebo)/worlds/empty.world" />
   <arg name="paused" default="true" />
@@ -8,6 +9,7 @@
   <arg name="gui" default="true" />
   <arg name="headless" default="false" />
   <arg name="debug" default="false" />
+  <arg name="pinned" default="false" />
   
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -20,12 +22,15 @@
     <arg name="headless" value="$(arg headless)" />
   </include>
 
-  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	args="-urdf -model johnny5 -z 0.9 -param robot_description" />
+  <group ns="/gazebo/$(arg robot_name)">
+    <!-- load robot description into global namespace, otherwise the controller spawner won't find the urdf... -->
+    <param name="/robot_description" command="$(find xacro)/xacro.py '$(find thormang3_description)/urdf/thormang3.xacro' robot_name:=$(arg robot_name) pinned:=$(arg pinned)" />
 
-  <!-- Gazebo ros_control launch file -->
-  <group ns="/gazebo/johnny5" if="$(arg position_controller)">
-    <include file="$(find thormang3_gazebo)/launch/position_controller.launch" />
+    <!-- Gazebo ros_control launch file -->
+    <include file="$(find thormang3_gazebo)/launch/position_controller.launch" if="$(arg position_controller)"/>
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+	  args="-urdf -model $(arg robot_name) -z 0.9 -param /$(arg robot_name)/robot_description" />
   </group>
 </launch>
