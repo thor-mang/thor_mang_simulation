@@ -87,8 +87,8 @@
         <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
             <alwaysOn>true</alwaysOn>       
             <bodyName>imu_link</bodyName>
-            <topicName>/sensor/imu</topicName>
-            <serviceName>imu_service</serviceName>
+            <topicName>sensor/imu</topicName>
+            <serviceName>sensor/imu_service</serviceName>
             <gaussianNoise>0.0</gaussianNoise>
             <updateRate>100.0</updateRate>
             <imu>
@@ -119,7 +119,7 @@
   <gazebo>
     <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
       <updateRate>125.0</updateRate>
-      <topicName>/sensor/ft_left_foot</topicName>
+      <topicName>sensor/ft_left_foot</topicName>
       <jointName>l_leg_an_r</jointName>
     </plugin>
   </gazebo>
@@ -131,32 +131,32 @@
   <gazebo>
     <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
       <updateRate>125.0</updateRate>
-      <topicName>/sensor/ft_right_foot</topicName>
+      <topicName>sensor/ft_right_foot</topicName>
       <jointName>r_leg_an_r</jointName>
     </plugin>
   </gazebo>
     
   <!-- Left hand -->
-  <gazebo reference="l_arm_wr_p_link">
+  <gazebo reference="l_arm_wr_p">
     <provideFeedback>true</provideFeedback>
   </gazebo>
   <gazebo>
     <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
       <updateRate>125.0</updateRate>
-      <topicName>/sensor/ft_left_wrist</topicName>
-      <jointName>l_arm_wr_p_link</jointName>
+      <topicName>sensor/ft_left_wrist</topicName>
+      <jointName>l_arm_wr_p</jointName>
     </plugin>
   </gazebo>
     
   <!-- Right hand -->
-  <gazebo reference="r_arm_wr_p_link">
+  <gazebo reference="r_arm_wr_p">
     <provideFeedback>true</provideFeedback>
   </gazebo>
   <gazebo>
     <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
       <updateRate>125.0</updateRate>
-      <topicName>/sensor/ft_right_wrist</topicName>
-      <jointName>r_arm_wr_p_link</jointName>
+      <topicName>sensor/ft_right_wrist</topicName>
+      <jointName>r_arm_wr_p</jointName>
     </plugin>
   </gazebo>
 
