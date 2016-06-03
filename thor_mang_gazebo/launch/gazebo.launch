@@ -32,9 +32,15 @@
 
     <!-- Gazebo ros_control launch file -->
     <include file="$(find thormang3_gazebo)/launch/position_controller.launch" if="$(arg position_controller)"/>
+  </group>
 
+  <group ns="$(arg robot_name)"> 
     <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	  args="-urdf -model $(arg robot_name) -z 0.9 -param /$(arg robot_name)/robot_description" />
+      args="-urdf -model $(arg robot_name) -z 0.9 -param robot_description" />
+
+    <!-- Run topic relays for topics published by gazebo to simulate real sensors -->
+    <node name="imu_raw_relay" pkg="topic_tools" type="relay" args="/gazebo/$(arg robot_name)/sensor/imu sensor/imu/raw" />
+    <node name="imu_filtered_relay" pkg="topic_tools" type="relay" args="/gazebo/$(arg robot_name)/sensor/imu sensor/imu/filtered" />
   </group>
 </launch>
