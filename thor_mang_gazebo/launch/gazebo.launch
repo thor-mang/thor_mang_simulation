@@ -34,7 +34,8 @@
     <group if="$(arg position_controller)" >
       <include file="$(find thormang3_gazebo)/launch/position_controller.launch" />
       <include file="$(find thor_vt_hand_ros_control)/launch/l_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>
-      <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>
+      <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>      	
+      <include file="$(find thormang3_gazebo)/launch/hector_multisensor_head_controller.launch" />
     </group>
   </group>
 
