@@ -24,12 +24,6 @@
   </include>
 
   <group ns="/gazebo/$(arg robot_name)">
-    <!-- TODO: load robot description into global namespace, otherwise the controller spawner won't find the urdf... -->
-    <param name="/robot_description" command="$(find xacro)/xacro.py '$(find thormang3_description)/urdf/thormang3.xacro'
-      robot_name:=$(arg robot_name)
-      use_hands:=$(arg use_hands)
-      pinned:=$(arg pinned)" />
-
     <!-- Gazebo ros_control launch file -->
     <group if="$(arg position_controller)" >
       <include file="$(find thormang3_gazebo)/launch/position_controller.launch" />
