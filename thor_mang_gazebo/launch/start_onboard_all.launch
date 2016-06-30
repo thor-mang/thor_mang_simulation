@@ -37,5 +37,7 @@
   </include>
 
   <!-- Start onboard common -->
-  <include file="$(find thor_mang_onboard_launch)/launch/onboard_common.launch"/>    
+  <include file="$(find thor_mang_onboard_launch)/launch/onboard_common.launch">
+    <arg name="gazebo" value="true" />
+  </include>    
 </launch>
