@@ -5,22 +5,23 @@
   <arg name="use_hands" default="false" />
   <arg name="position_controller" default="true" />
   <arg name="world_name" default="$(find thormang3_gazebo)/worlds/empty.world" />
+  <arg name="pinned" default="false" />
+  <arg name="ground_truth" default="true" />
   <arg name="paused" default="true" />
   <arg name="use_sim_time" default="true" />
   <arg name="gui" default="true" />
   <arg name="headless" default="false" />
   <arg name="debug" default="false" />
-  <arg name="pinned" default="false" />
   
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(arg world_name)" />
     <arg name="physics" value="ode" />
-    <arg name="debug" value="$(arg debug)" />
-    <arg name="gui" value="$(arg gui)" />
+    <arg name="world_name" value="$(arg world_name)" />
     <arg name="paused" value="$(arg paused)" />
     <arg name="use_sim_time" value="$(arg use_sim_time)" />
+    <arg name="gui" value="$(arg gui)" />
     <arg name="headless" value="$(arg headless)" />
+    <arg name="debug" value="$(arg debug)" />
   </include>
   
   <!--  needed to prevent gazebo plugins adding a namespace to frame_id-->
@@ -30,9 +31,17 @@
     <!-- Gazebo ros_control launch file -->
     <group if="$(arg position_controller)" >
       <include file="$(find thormang3_gazebo)/launch/position_controller.launch" />
-      <include file="$(find thor_vt_hand_ros_control)/launch/l_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>
-      <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>      	
       <include file="$(find thormang3_gazebo)/launch/hector_multisensor_head_controller.launch" />
+      <include file="$(find thor_vt_hand_ros_control)/launch/l_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>
+      <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>
+    </group>
+
+    <!-- transform ground truth pose to tf -->
+    <group if="$(arg ground_truth)" >
+      <node name="pelvis_odom_to_tf" pkg="message_to_tf" type="message_to_tf">
+        <param name="odometry_topic" type="string" value="/gazebo/$(arg robot_name)/pelvis_odom" />
+        <param name="child_frame_id" type="string" value="pelvis_link" />
+      </node>
     </group>
   </group>
 
