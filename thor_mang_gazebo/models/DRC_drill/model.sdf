@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="drill">
+    <link name="link">
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <inertia>
+          <ixx>0.009</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.012</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.003</izz>
+        </inertia>
+        <mass>1.50251902</mass>
+      </inertial>
+      <collision name="collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://DRC_drill/meshes/DRC_drill.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <max_vel>0.1</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://DRC_drill/meshes/DRC_drill.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>
