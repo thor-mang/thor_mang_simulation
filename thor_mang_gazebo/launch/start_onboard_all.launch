@@ -32,4 +32,7 @@
   <include file="$(find thor_mang_onboard_launch)/launch/onboard_common.launch">
     <arg name="gazebo" value="true" />
   </include>    
+  
+  <!-- Start TF publisher for the RealSense camera-->
+  <include file="$(find thor_mang_gazebo)/launch/start_realsense_tf_publisher.launch"></include>
 </launch>
