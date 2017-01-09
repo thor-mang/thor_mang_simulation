@@ -39,6 +39,6 @@
     <arg name="ground_truth" value="$(arg ground_truth)" />
   </include>
   
-   <!-- Start TF publisher for the RealSense camera-->
-  <include file="$(find thor_mang_gazebo)/launch/start_realsense_tf_publisher.launch"></include>
+  <!-- Start TF publisher for the RealSense camera-->
+  <include file="$(find thor_mang_gazebo)/launch/start_realsense_tf_publisher.launch" />
 </launch>
