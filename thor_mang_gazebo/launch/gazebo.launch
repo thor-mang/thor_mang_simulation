@@ -24,8 +24,8 @@
     <arg name="debug" value="$(arg debug)" />
   </include>
   
-  <!--  needed to prevent gazebo plugins adding a namespace to frame_id-->
-  <rosparam param="/johnny5/sensor/tf_prefix"> "/" </rosparam>
+  <!-- needed to prevent gazebo plugins adding a namespace to frame_id-->
+  <rosparam param="/$(arg robot_name)/sensor/tf_prefix"> "/" </rosparam>
 
   <group ns="/gazebo/$(arg robot_name)">
     <!-- Gazebo ros_control launch file -->
