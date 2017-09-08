@@ -31,9 +31,18 @@
     <!-- Gazebo ros_control launch file -->
     <group if="$(arg position_controller)" >
       <include file="$(find thor_mang_gazebo)/launch/position_controller.launch" />
-      <include file="$(find thor_mang_gazebo)/launch/hector_multisensor_head_controller.launch" />
-      <include file="$(find thor_vt_hand_ros_control)/launch/l_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>
-      <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)"/>
+
+      <include file="$(find thor_mang_gazebo)/launch/hector_multisensor_head_controller.launch">
+        <arg name="robot_name" value="$(arg robot_name)" />
+      </include>
+
+      <include file="$(find thor_vt_hand_ros_control)/launch/l_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)">
+        <arg name="robot_name" value="$(arg robot_name)" />
+      </include>
+
+      <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)">
+        <arg name="robot_name" value="$(arg robot_name)" />
+      </include>
     </group>
 
     <!-- transform ground truth pose to tf -->
