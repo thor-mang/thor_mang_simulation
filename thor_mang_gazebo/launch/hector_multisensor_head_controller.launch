@@ -9,8 +9,8 @@
 
     <!-- load position controllers -->
     <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
-      args="--stopped head_lidar_controller
-            --shutdown-timeout 3"/>
+      args="--stopped
+            head_lidar_controller"/>
 
     <!-- Script to start the stopped controller after waiting for the end of the initialization-->
     <node name="start_head_controller" pkg="thor_vt_hand_ros_control" type="start_controller_script" args="/gazebo/$(arg robot_name)/joints 1 head_lidar_controller" />
