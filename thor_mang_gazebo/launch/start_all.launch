@@ -4,7 +4,7 @@
   <arg name="robot_name" default="johnny5" />
   <arg name="use_hands" default="$(optenv USE_HANDS false)" />
   <arg name="position_controller" default="true" />
-  <arg name="world_name" default="empty" />
+  <arg name="world_name" default="$(find thor_mang_gazebo)/worlds/empty.world" />
   <arg name="pinned" default="false" />
   <arg name="ground_truth" default="true" />
   <arg name="paused" default="true" />
