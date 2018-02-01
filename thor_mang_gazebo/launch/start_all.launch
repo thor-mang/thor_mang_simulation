@@ -40,10 +40,8 @@
   </include>
   
   <group if="$(arg ground_truth)">
-    <node pkg="tf" type="static_transform_publisher" name="odom_world_tf_static_publisher" args="0 0 0 0 0 0 1 world odom 100" />
+    <node pkg="tf" type="static_transform_publisher" name="world_odom_tf_static_publisher" args="0 0 0 0 0 0 1 world odom 100" />
   </group>
-  
-  
 
   <!-- Start TF publisher for the RealSense camera-->
   <include file="$(find thor_mang_gazebo)/launch/start_realsense_tf_publisher.launch" />
