@@ -50,6 +50,7 @@
       <node name="pelvis_odom_to_tf" pkg="message_to_tf" type="message_to_tf">
         <param name="odometry_topic" type="string" value="/gazebo/$(arg robot_name)/pelvis_odom" />
         <param name="child_frame_id" type="string" value="pelvis_link" />
+        <param name="frame_id" type="string" value="odom" />
       </node>
     </group>
   </group>
