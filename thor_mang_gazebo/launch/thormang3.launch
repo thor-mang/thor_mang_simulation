@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<launch>
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="robot_name" default="thormang3" />
+  <arg name="use_hands" default="$(optenv USE_HANDS false)" />
+  <arg name="position_controller" default="true" />
+  <arg name="start_onboard" default="false" />
+
+  <arg name="world_name" default="$(find thor_mang_gazebo)/worlds/empty.world" />
+  <arg name="pinned" default="false" />
+  <arg name="ground_truth" default="true" />
+  <arg name="paused" default="true" />
+  <arg name="gazebo_gui" default="true" />
+  
+  <!-- start Gazebo -->
+  <include file="$(find thor_mang_gazebo)/launch/gazebo.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
+    <arg name="use_hands" value="$(arg use_hands)" />
+    <arg name="position_controller" value="$(arg position_controller)" />
+    <arg name="world_name" value="$(arg world_name)" />
+    <arg name="pinned" value="$(arg pinned)" />
+    <arg name="ground_truth" value="$(arg ground_truth)" />
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="gazebo_gui" value="$(arg gazebo_gui)" />
+  </include>
+
+  <group ns="$(arg robot_name)">
+    <!-- start robot basics -->
+    <include file="$(find thor_mang_onboard_launch)/launch/robot_basics.launch">
+      <arg name="robot_name" value="$(arg robot_name)" />
+      <arg name="use_hands" value="$(arg use_hands)" />
+      <arg name="gazebo" value="true" />
+      <arg name="pinned" value="$(arg pinned)" />
+      <arg name="ground_truth" value="$(arg ground_truth)" />
+    </include>
+
+    <!-- THORMANG3 Manager -->
+    <include file="$(find thormang3_manager)/launch/thormang3_manager.launch">
+      <arg name="robot_name"  value="$(arg robot_name)" />
+      <arg name="gazebo"      value="true" />
+    </include>
+  </group>
+
+  <!-- start onboard software -->
+  <include file="$(find thor_mang_onboard_launch)/launch/onboard_common.launch" if="$(arg start_onboard)">
+    <arg name="gazebo" value="true" />
+  </include>
+</launch>

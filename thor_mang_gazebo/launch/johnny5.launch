@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="robot_name" default="johnny5" />
+
+  <include file="$(find thor_mang_gazebo)/launch/thormang3.launch" pass_all_args="true" />
+</launch>

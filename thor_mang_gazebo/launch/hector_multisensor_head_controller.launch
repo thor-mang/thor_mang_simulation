@@ -3,19 +3,17 @@
 <launch>
   <arg name="robot_name" default="thormang3" />
 
-  <group ns="joints">
-    <!-- Load joint controller configurations from YAML file to parameter server -->
-    <rosparam file="$(find thor_mang_gazebo)/config/velocity_controllers.yaml" command="load" />
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find thor_mang_gazebo)/config/velocity_controllers.yaml" command="load" />
 
-    <!-- load position controllers -->
-    <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
-      args="--stopped
-            head_lidar_controller"/>
+  <!-- load position controllers -->
+  <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+    args="--stopped
+          head_lidar_controller"/>
 
-    <!-- Script to start the stopped controller after waiting for the end of the initialization-->
-    <node name="start_head_controller" pkg="thor_vt_hand_ros_control" type="start_controller_script" args="/gazebo/$(arg robot_name)/joints 1 head_lidar_controller" />
+  <!-- Script to start the stopped controller after waiting for the end of the initialization-->
+  <node name="start_head_controller" pkg="thor_vt_hand_ros_control" type="start_controller_script" args="/gazebo/$(arg robot_name)/joints 1 head_lidar_controller" />
 
-    <!-- Start the spinning of the head lidar -->
-    <node name="set_head_lidar_velocity" pkg="rostopic" type="rostopic" output="screen" args="pub -r 0.1 head_lidar_controller/command std_msgs/Float64 'data: 0.6'" />
-  </group>
+  <!-- Start the spinning of the head lidar -->
+  <node name="set_head_lidar_velocity" pkg="rostopic" type="rostopic" output="screen" args="pub -r 0.1 head_lidar_controller/command std_msgs/Float64 'data: 0.6'" />
 </launch>

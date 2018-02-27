@@ -4,46 +4,62 @@
   <arg name="robot_name" default="thormang3" />
   <arg name="use_hands" default="false" />
   <arg name="position_controller" default="true" />
+
   <arg name="world_name" default="$(find thor_mang_gazebo)/worlds/empty.world" />
   <arg name="pinned" default="false" />
   <arg name="ground_truth" default="true" />
   <arg name="paused" default="true" />
-  <arg name="use_sim_time" default="true" />
-  <arg name="gui" default="true" />
-  <arg name="headless" default="false" />
-  <arg name="debug" default="false" />
+  <arg name="gazebo_gui" default="true" />
   
-  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <!-- needed to prevent gazebo plugins adding a namespace to frame_id-->
+  <rosparam param="/$(arg robot_name)/tf_prefix"> "" </rosparam>
+  <rosparam param="/$(arg robot_name)/sensor/tf_prefix"> "" </rosparam>
+  
+  <!-- start Gazebo -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="physics" value="ode" />
     <arg name="world_name" value="$(arg world_name)" />
     <arg name="paused" value="$(arg paused)" />
-    <arg name="use_sim_time" value="$(arg use_sim_time)" />
-    <arg name="gui" value="$(arg gui)" />
-    <arg name="headless" value="$(arg headless)" />
-    <arg name="debug" value="$(arg debug)" />
+    <arg name="use_sim_time" value="True" />
+    <arg name="gui" value="$(arg gazebo_gui)" />
+    <arg name="headless" value="False" />
+    <arg name="debug" value="False" />
   </include>
-  
-  <!-- needed to prevent gazebo plugins adding a namespace to frame_id-->
-  <rosparam param="/$(arg robot_name)/sensor/tf_prefix"> "" </rosparam>
 
   <group ns="/gazebo/$(arg robot_name)">
-    <!-- Gazebo ros_control launch file -->
-    <group if="$(arg position_controller)" >
-      <include file="$(find thor_mang_gazebo)/launch/position_controller.launch" />
+    <!-- load Gazebo controllers -->
+    <group ns="joints">
+      <!-- HACK: Load the URDF into the ROS Parameter Server at gazebo controller namespace due to a bug in controller spawner -->
+      <include file="$(find thormang3_description)/launch/load_robot_description.launch">
+        <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="use_hands" value="$(arg use_hands)" />
+        <arg name="pinned" value="$(arg pinned)" />
+      </include>
+
+      <!-- Gazebo ros controllers -->
+      <group if="$(arg position_controller)" >
+        <include file="$(find thor_mang_gazebo)/launch/position_controller.launch" />
+
+        <include file="$(find thor_vt_hand_ros_control)/launch/l_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)">
+          <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+
+        <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)">
+          <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+      </group>
 
       <include file="$(find thor_mang_gazebo)/launch/hector_multisensor_head_controller.launch">
         <arg name="robot_name" value="$(arg robot_name)" />
       </include>
-
-      <include file="$(find thor_vt_hand_ros_control)/launch/l_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)">
-        <arg name="robot_name" value="$(arg robot_name)" />
-      </include>
-
-      <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_sim_position_controllers.launch" if="$(arg use_hands)">
-        <arg name="robot_name" value="$(arg robot_name)" />
-      </include>
     </group>
+
+    <!-- run topic relays for topics published by gazebo to simulate real sensors -->
+    <node name="imu_raw_relay" pkg="topic_tools" type="relay" args="/gazebo/$(arg robot_name)/sensor/imu /$(arg robot_name)/sensor/imu/raw" />
+    <node name="imu_filtered_relay" pkg="topic_tools" type="relay" args="/gazebo/$(arg robot_name)/sensor/imu /$(arg robot_name)/sensor/imu/filtered" />
+
+    <!-- start static TF publisher for the RealSense camera -->
+    <include file="$(find thor_mang_gazebo)/launch/start_realsense_tf_publisher.launch" />
 
     <!-- transform ground truth pose to tf -->
     <group if="$(arg ground_truth)" >
@@ -52,16 +68,13 @@
         <param name="child_frame_id" type="string" value="pelvis_link" />
         <param name="frame_id" type="string" value="odom" />
       </node>
+
+      <node pkg="tf" type="static_transform_publisher" name="world_odom_tf_static_publisher" args="0 0 0 0 0 0 1 world odom 100" />
     </group>
   </group>
 
-  <group ns="$(arg robot_name)"> 
-    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-      args="-urdf -model $(arg robot_name) -z 0.9 -param robot_description" />
-
-    <!-- Run topic relays for topics published by gazebo to simulate real sensors -->
-    <node name="imu_raw_relay" pkg="topic_tools" type="relay" args="/gazebo/$(arg robot_name)/sensor/imu sensor/imu/raw" />
-    <node name="imu_filtered_relay" pkg="topic_tools" type="relay" args="/gazebo/$(arg robot_name)/sensor/imu sensor/imu/filtered" />
+  <group ns="$(arg robot_name)">
+    <!-- robot spawner -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model $(arg robot_name) -z 0.9 -param robot_description" />
   </group>
 </launch>
