@@ -82,6 +82,8 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
+catkin_add_env_hooks(30.thor_mang_gazebo SHELLS bash)
+
 ###########
 ## Build ##
 ###########
