@@ -37,6 +37,7 @@
     <!-- THORMANG3 Manager -->
     <include file="$(find thormang3_manager)/launch/thormang3_manager.launch">
       <arg name="robot_name"  value="$(arg robot_name)" />
+       <arg name="use_hands"  value="$(arg use_hands)" />
       <arg name="gazebo"      value="true" />
     </include>
   </group>
