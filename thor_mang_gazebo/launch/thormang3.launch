@@ -2,7 +2,8 @@
 <launch>
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
   <arg name="robot_name" default="thormang3" />
-  <arg name="use_hands" default="$(optenv USE_HANDS false)" />
+  <arg name="l_hand_type" default="$(optenv L_HAND_TYPE none)" />
+  <arg name="r_hand_type" default="$(optenv R_HAND_TYPE none)" />
   <arg name="position_controller" default="true" />
   <arg name="start_onboard" default="false" />
 
@@ -15,7 +16,8 @@
   <!-- start Gazebo -->
   <include file="$(find thor_mang_gazebo)/launch/gazebo.launch">
     <arg name="robot_name" value="$(arg robot_name)" />
-    <arg name="use_hands" value="$(arg use_hands)" />
+    <arg name="l_hand_type" value="$(arg l_hand_type)" />
+    <arg name="r_hand_type" value="$(arg r_hand_type)" />
     <arg name="position_controller" value="$(arg position_controller)" />
     <arg name="world_name" value="$(arg world_name)" />
     <arg name="pinned" value="$(arg pinned)" />
@@ -28,7 +30,8 @@
     <!-- start robot basics -->
     <include file="$(find thor_mang_onboard_launch)/launch/robot_basics.launch">
       <arg name="robot_name" value="$(arg robot_name)" />
-      <arg name="use_hands" value="$(arg use_hands)" />
+      <arg name="l_hand_type" value="$(arg l_hand_type)" />
+      <arg name="r_hand_type" value="$(arg r_hand_type)" />
       <arg name="gazebo" value="true" />
       <arg name="pinned" value="$(arg pinned)" />
       <arg name="ground_truth" value="$(arg ground_truth)" />
@@ -37,7 +40,8 @@
     <!-- THORMANG3 Manager -->
     <include file="$(find thormang3_manager)/launch/thormang3_manager.launch">
       <arg name="robot_name"  value="$(arg robot_name)" />
-       <arg name="use_hands"  value="$(arg use_hands)" />
+      <arg name="l_hand_type" value="$(arg l_hand_type)" />
+      <arg name="r_hand_type" value="$(arg r_hand_type)" />
       <arg name="gazebo"      value="true" />
     </include>
   </group>

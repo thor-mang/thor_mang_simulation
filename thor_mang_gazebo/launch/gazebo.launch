@@ -2,7 +2,8 @@
 <launch>
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
   <arg name="robot_name" default="thormang3" />
-  <arg name="use_hands" default="false" />
+  <arg name="l_hand_type" default="$(optenv L_HAND_TYPE none)" />
+  <arg name="r_hand_type" default="$(optenv R_HAND_TYPE none)" />
   <arg name="position_controller" default="true" />
 
   <arg name="world_name" default="$(find thor_mang_gazebo)/worlds/empty.world" />
@@ -32,7 +33,8 @@
       <!-- HACK: Load the URDF into the ROS Parameter Server at gazebo controller namespace due to a bug in controller spawner -->
       <include file="$(find thormang3_description)/launch/load_robot_description.launch">
         <arg name="robot_name" value="$(arg robot_name)" />
-        <arg name="use_hands" value="$(arg use_hands)" />
+        <arg name="l_hand_type" value="$(arg l_hand_type)" />
+        <arg name="r_hand_type" value="$(arg r_hand_type)" />
         <arg name="pinned" value="$(arg pinned)" />
       </include>
 
@@ -40,15 +42,32 @@
       <group if="$(arg position_controller)" >
         <include file="$(find thor_mang_gazebo)/launch/position_controller.launch" />
 
-        <include file="$(find thor_vt_hand_ros_control)/launch/l_vt_hand_position_controllers.launch" if="$(arg use_hands)">
+        <!-- load ros controllers for vt hands if attached -->
+        <include file="$(find thor_vt_hand_gazebo)/launch/left_hand_position_controllers.launch" if="$(eval arg('l_hand_type') == 'vt_hand')">
           <arg name="robot_name" value="$(arg robot_name)" />
         </include>
 
-        <include file="$(find thor_vt_hand_ros_control)/launch/r_vt_hand_position_controllers.launch" if="$(arg use_hands)">
+        <include file="$(find thor_vt_hand_gazebo)/launch/right_hand_position_controllers.launch" if="$(eval arg('r_hand_type') == 'vt_hand')">
           <arg name="robot_name" value="$(arg robot_name)" />
         </include>
+
+        <!-- load ros controllers for RH_P12_RN grippers if attached -->
+        <include file="$(find rh_p12_rn_gazebo)/launch/left_hand_position_controllers.launch" if="$(eval arg('l_hand_type') == 'rh_p12_rn')">
+          <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+        <node name="l_rh_p12_rn_mimic_gazebo_pub" pkg="rh_p12_rn_gazebo" type="gazebo_rh_joint_mimic_pub" if="$(eval arg('l_hand_type') == 'rh_p12_rn')">
+          <param name="prefix" type="string" value="l_" />
+        </node>
+
+        <include file="$(find rh_p12_rn_gazebo)/launch/right_hand_position_controllers.launch" if="$(eval arg('r_hand_type') == 'rh_p12_rn')">
+          <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
+        <node name="r_rh_p12_rn_mimic_gazebo_pub" pkg="rh_p12_rn_gazebo" type="gazebo_rh_joint_mimic_pub" if="$(eval arg('r_hand_type') == 'rh_p12_rn')">
+          <param name="prefix" type="string" value="r_" />
+        </node>
       </group>
 
+      <!-- load ros controllers for multisensor head -->
       <include file="$(find thor_mang_gazebo)/launch/hector_multisensor_head_controller.launch">
         <arg name="robot_name" value="$(arg robot_name)" />
       </include>
