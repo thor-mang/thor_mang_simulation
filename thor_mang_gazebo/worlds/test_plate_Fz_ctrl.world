@@ -105,7 +105,7 @@
           <geometry>
             <box>
               <!--<size>0.5 0.5 .05</size>-->
-	      <size>0.5 0.5 .10</size>
+	      <size>2.0 0.5 .10</size>
             </box>
           </geometry>
 	  <surface>
@@ -129,7 +129,7 @@
           <geometry>
             <box>
               <!--<size>0.5 0.5 .05</size>-->
-              <size>0.5 0.5 .10</size>
+              <size>2.0 0.5 .10</size>
             </box>
           </geometry>
         </visual>
