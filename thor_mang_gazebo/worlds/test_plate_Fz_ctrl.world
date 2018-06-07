@@ -98,14 +98,14 @@
 
     <model name="box">
       <static>true</static>
-      <!--<pose>0 0.25 -0.023 0 0 0</pose>-->
-      <pose>0 0.25 -0.03 0 0 0</pose>
+      <!--<pose>0 0.25 -0.03 0 0 0</pose>-->
+      <!--<pose>1.12 0.25 -0.03 0 0 0</pose>-->
+      <pose>1.12 -0.25 -0.035 0 0 0</pose>
       <link name="link">
         <collision name="collision">
           <geometry>
             <box>
-              <!--<size>0.5 0.5 .05</size>-->
-	      <size>2.0 0.5 .10</size>
+              <size>2.0 0.5 .10</size>
             </box>
           </geometry>
 	  <surface>
@@ -128,7 +128,6 @@
         <visual name="visual">
           <geometry>
             <box>
-              <!--<size>0.5 0.5 .05</size>-->
               <size>2.0 0.5 .10</size>
             </box>
           </geometry>
