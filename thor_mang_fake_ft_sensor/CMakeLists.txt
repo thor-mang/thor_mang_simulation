@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(thor_mang_virtual_ft_sensor)
+project(thor_mang_fake_ft_sensor)
 
 #set(CMAKE_BUILD_TYPE Debug)
 #set(CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -82,7 +82,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES thor_mang_virtual_ft_sensor
+  LIBRARIES thor_mang_fake_ft_sensor
   CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
@@ -97,13 +97,13 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 ## Specify additional locations of header files
 set(HEADERS
-  include/${PROJECT_NAME}/thor_mang_virtual_ft_sensor.h
-  include/${PROJECT_NAME}/thor_mang_virtual_ft_sensor_node.h
+  include/${PROJECT_NAME}/thor_mang_fake_ft_sensor.h
+  include/${PROJECT_NAME}/thor_mang_fake_ft_sensor_node.h
 )
 
 set(SOURCES
-  src/thor_mang_virtual_ft_sensor.cpp
-  src/thor_mang_virtual_ft_sensor_node.cpp
+  src/thor_mang_fake_ft_sensor.cpp
+  src/thor_mang_fake_ft_sensor_node.cpp
 )
 
 ## Declare a cpp library

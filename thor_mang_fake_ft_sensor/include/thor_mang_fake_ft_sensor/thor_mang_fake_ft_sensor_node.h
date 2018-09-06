@@ -1,5 +1,5 @@
 //=================================================================================================
-// Copyright (c) 2018, Felix Sternkopf, TU Darmstadt
+// Copyright (c) 2018, Alexander Stumpf, TU Darmstadt
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,30 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //=================================================================================================
 
-#ifndef THOR_MANG_VIRTUAL_FT_SENSOR_H__
-#define THOR_MANG_VIRTUAL_FT_SENSOR_H__
+#ifndef THOR_MANG_FAKE_FT_SENSOR_NODE_H__
+#define THOR_MANG_FAKE_FT_SENSOR_NODE_H__
 
 #include <ros/ros.h>
+
+#include <thor_mang_fake_ft_sensor/thor_mang_fake_ft_sensor.h>
 
 namespace thormang3
 {
 
-class VirtualFTSensor
+class FakeFTSensorNode
 {
 public:
-  VirtualFTSensor();
-  ~VirtualFTSensor();
+  FakeFTSensorNode(ros::NodeHandle& nh);
+  virtual ~FakeFTSensorNode();
+
+protected:
+  void update(const ros::TimerEvent& event = ros::TimerEvent());
+
+  FakeFTSensor fake_ft_sensor_;
+
+  // timer for updating periodically
+  ros::Timer update_timer_;
+
 };
 }
 

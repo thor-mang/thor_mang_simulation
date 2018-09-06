@@ -1,5 +1,5 @@
 //=================================================================================================
-// Copyright (c) 2018, Alexander Stumpf, TU Darmstadt
+// Copyright (c) 2018, Felix Sternkopf, TU Darmstadt
 // All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,27 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //=================================================================================================
 
-#ifndef THOR_MANG_VIRTUAL_FT_SENSOR_NODE_H__
-#define THOR_MANG_VIRTUAL_FT_SENSOR_NODE_H__
+#ifndef THOR_MANG_FAKE_FT_SENSOR_H__
+#define THOR_MANG_FAKE_FT_SENSOR_H__
 
 #include <ros/ros.h>
 
 namespace thormang3
 {
 
-class VirtualFTSensorNode
+class FakeFTSensor
 {
 public:
-  VirtualFTSensorNode();
-  ~VirtualFTSensorNode();
+  FakeFTSensor();
+  ~FakeFTSensor();
+
+  bool initialize();
+  void process();
+  void reset();
+
+protected:
+  void calcRobotDynamics();
+
 };
 }
 

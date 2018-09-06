@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>thor_mang_virtual_ft_sensor</name>
+  <name>thor_mang_fake_ft_sensor</name>
   <version>0.1.0</version>
-  <description>The thor_mang_virtual_ft_sensor package</description>
+  <description>The thor_mang_fake_ft_sensor package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
