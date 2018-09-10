@@ -31,21 +31,27 @@
 
 #include <ros/ros.h>
 
+#include <kdl_parser/kdl_parser.hpp>
+
 namespace thormang3
 {
 
 class FakeFTSensor
 {
 public:
-  FakeFTSensor();
+  FakeFTSensor(ros::NodeHandle& nh);
   ~FakeFTSensor();
 
-  bool initialize();
+  bool initialize(std::string robotParamName);
   void process();
   void reset();
 
 protected:
   void calcRobotDynamics();
+
+private:
+  KDL::Tree robot_;
+  ros::NodeHandle nh_;
 
 };
 }
