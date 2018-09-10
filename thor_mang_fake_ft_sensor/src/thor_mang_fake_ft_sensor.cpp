@@ -26,5 +26,27 @@ bool FakeFTSensor::initialize(std::string robotParamName)
   return true;
 }
 
+void FakeFTSensor::process()
+{
+
+}
+
+void FakeFTSensor::reset()
+{
+
+}
+
+void FakeFTSensor::calcRobotDynamics()
+{
+  KDL::Vector grav(0, 0, -9.81);
+  KDL::Chain leftLegChain;
+  robot_.getChain("pelvis", "leftFT", leftLegChain);
+  KDL::Chain rightLegChain;
+  robot_.getChain("pelvis", "rightFT", rightLegChain);
+
+  //KDL::ChainIdSolver_RNE leftDynamics(leftLegChain, grav);
+  //KDL::ChainIdSolver_RNE rightDynamics(rightLegChain, grav);
+}
+
 } // namespace
 

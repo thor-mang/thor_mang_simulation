@@ -32,6 +32,7 @@
 #include <ros/ros.h>
 
 #include <kdl_parser/kdl_parser.hpp>
+//#include <kdl/chainidsolver_recursive_newton_euler.hpp>
 
 namespace thormang3
 {
