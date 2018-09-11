@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns" default="johnny5/thormang3" />
+    <!-- start fake ft sensor reading -->
+  <node name="fake_ft_sensor" pkg="thor_mang_fake_ft_sensor" type="thor_mang_fake_ft_sensor_node" respawn="true" output="screen" />
+</launch>
