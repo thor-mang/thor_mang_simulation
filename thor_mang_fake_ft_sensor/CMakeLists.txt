@@ -10,7 +10,7 @@ add_compile_options(-std=c++11)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp)
+find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs sensor_msgs tf_conversions eigen_conversions)
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
@@ -85,7 +85,7 @@ find_package(kdl_parser)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES thor_mang_fake_ft_sensor
-  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp geometry_msgs sensor_msgs tf_conversions eigen_conversions
 #  DEPENDS system_lib
 )
 
@@ -110,6 +110,7 @@ set(SOURCES
 
 ## Declare a cpp library
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_executable(thor_mang_fake_ft_sensor_node src/thor_mang_fake_ft_sensor_node.cpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 ## Add cmake target dependencies of the executable/library

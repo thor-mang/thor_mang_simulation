@@ -43,9 +43,10 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>roscpp</depend>
-  <!-- <depend>robotis_framework_common</depend> -->
-  <!-- <depend>l3_plugins</depend> -->
-
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>tf_conversions</depend>
+  <depend>eigen_conversions</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

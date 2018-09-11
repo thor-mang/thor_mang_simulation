@@ -45,7 +45,7 @@ public:
 protected:
   void update(const ros::TimerEvent& event = ros::TimerEvent());
 
-  //FakeFTSensor fake_ft_sensor_;
+  FakeFTSensor fake_ft_sensor_;
 
   // timer for updating periodically
   ros::Timer update_timer_;

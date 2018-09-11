@@ -32,7 +32,7 @@
 #include <ros/ros.h>
 
 #include <kdl_parser/kdl_parser.hpp>
-//#include <kdl/chainidsolver_recursive_newton_euler.hpp>
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
 
 namespace thormang3
 {
@@ -40,6 +40,7 @@ namespace thormang3
 class FakeFTSensor
 {
 public:
+  FakeFTSensor();
   FakeFTSensor(ros::NodeHandle& nh);
   ~FakeFTSensor();
 
