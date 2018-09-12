@@ -5,7 +5,7 @@ namespace thormang3
 FakeFTSensorNode::FakeFTSensorNode(ros::NodeHandle& nh)
   : fake_ft_sensor_(nh)
 {
-  fake_ft_sensor_.initialize("robot_description");
+  fake_ft_sensor_.initialize("/johnny5/robot_description");
 
   // schedule main update loop
   update_timer_ = nh.createTimer(nh.param("control_rate", 100.0), &FakeFTSensorNode::update, this);

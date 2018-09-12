@@ -110,7 +110,10 @@ set(SOURCES
 
 ## Declare a cpp library
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+## Declare a cpp executable
 add_executable(thor_mang_fake_ft_sensor_node src/thor_mang_fake_ft_sensor_node.cpp)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 ## Add cmake target dependencies of the executable/library
@@ -119,6 +122,7 @@ add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${kdl_parser_LIBRARIES} ${orocos_kdl_LIBRARIES})
+target_link_libraries(thor_mang_fake_ft_sensor_node ${PROJECT_NAME})
 
 #############
 ## Install ##
