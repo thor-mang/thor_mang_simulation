@@ -34,8 +34,21 @@
 #include <kdl_parser/kdl_parser.hpp>
 #include <kdl/chainidsolver_recursive_newton_euler.hpp>
 
+#include <boost/shared_ptr.hpp>
+#include <ros/subscriber.h>
+#include <sensor_msgs/JointState.h>
+
 namespace thormang3
 {
+struct Leg
+{
+  std::vector<std::string> joint_names_;
+  KDL::JntArray pos;
+  KDL::JntArray vel;
+  KDL::JntArray acc;
+  KDL::JntArray torque;
+  KDL::Wrenches force;
+};
 
 class FakeFTSensor
 {
@@ -49,12 +62,18 @@ public:
   void reset();
 
 protected:
-  void calcRobotDynamics();
+  void calcRobotLegDynamics();
+  void jointStateCallback(const sensor_msgs::JointState::ConstPtr& joint_states);
 
 private:
   KDL::Tree robot_;
   ros::NodeHandle nh_;
 
+  KDL::JntArray pos_left_leg_, pos_right_leg_, vel_left_leg_, vel_right_leg_, acc_left_leg_, acc_right_leg_;
+
+
+
+  ros::Subscriber jointStateSub_;
 };
 }
 

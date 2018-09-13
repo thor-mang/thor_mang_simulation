@@ -26,18 +26,19 @@ bool FakeFTSensor::initialize(std::string robotParamName)
     ROS_ERROR("[THOR::FakeFTSensors]: No Param named %s was found", robotParamName.c_str());
     return false;
   }
-  if(!kdl_parser::treeFromParam(robotDescription, robot_))
+  if(!kdl_parser::treeFromString(robotDescription, robot_))
   {
     ROS_ERROR("[THOR::FakeFTSensors]: Failed to construct KDL tree of robot description");
     return false;
   }
 
+  jointStateSub_ = nh_.subscribe<sensor_msgs::JointState>("/johnny5/joints/joint_states", 1000, &FakeFTSensor::jointStateCallback, this);
   return true;
 }
 
 void FakeFTSensor::process()
 {
-  calcRobotDynamics();
+  calcRobotLegDynamics();
 }
 
 void FakeFTSensor::reset()
@@ -45,27 +46,24 @@ void FakeFTSensor::reset()
 
 }
 
-void FakeFTSensor::calcRobotDynamics()
+void FakeFTSensor::calcRobotLegDynamics()
 {
   KDL::Vector grav(0, 0, -9.81);
   KDL::Chain leftLegChain;
-  robot_.getChain("pelvis", "leftFT", leftLegChain);
+  robot_.getChain("pelvis_link", "l_leg_an_r_link", leftLegChain);
   KDL::Chain rightLegChain;
-  robot_.getChain("pelvis", "rightFT", rightLegChain);
+  robot_.getChain("pelvis_link", "r_leg_an_r_link", rightLegChain);
 
   KDL::ChainIdSolver_RNE leftDynamics(leftLegChain, grav);
   KDL::ChainIdSolver_RNE rightDynamics(rightLegChain, grav);
 
-  KDL::JntArray q, q_dot, q_dotdot;
-  KDL::JntArray torques;
-  KDL::Wrenches f_ext;
+  //leftDynamics.CartToJnt(leftLeg_.pos, leftLeg_.vel, leftLeg_.acc, leftLeg_.force, leftLeg_.torque);
+  //rightDynamics.CartToJnt(rightLeg_.pos, rightLeg_.vel, rightLeg_.acc, rightLeg_.force, rightLeg_.torque);
 
-  leftDynamics.CartToJnt(q, q_dot, q_dotdot, f_ext, torques);
+}
 
-  for(int i = 0; i < q_dot.rows(); i++)
-  {
-    ROS_ERROR("Geschwindigkeit: %f", q_dot(1));
-  }
+void FakeFTSensor::jointStateCallback(const sensor_msgs::JointState::ConstPtr& joint_states)
+{
 
 }
 
