@@ -55,6 +55,10 @@ bool FakeFTSensor::initialize(std::string robotParamName)
   for(int i = 0; i < joint_names_.size() / 2; i++) force_.push_back(KDL::Wrench());
 
   jointStateSub_ = nh_.subscribe<sensor_msgs::JointState>("/johnny5/joints/joint_states", 1000, &FakeFTSensor::jointStateCallback, this);
+
+  leftFTSensorDataSub_ = nh_.subscribe<geometry_msgs::WrenchStamped>("/johnny5/sensor/ft/left_foot/raw", 1000, &FakeFTSensor::leftFTSensorCallback, this);
+  rightFTSensorDataSub_ = nh_.subscribe<geometry_msgs::WrenchStamped>("/johnny5/sensor/ft/right_foot/raw", 1000, &FakeFTSensor::rightFTSensorCallback, this);
+
   leftFTSensorPub_ = nh_.advertise<geometry_msgs::WrenchStamped>("/johnny5/sensor/ft/left_foot/faked", 1000, this);
   rightFTSensorPub_ = nh_.advertise<geometry_msgs::WrenchStamped>("/johnny5/sensor/ft/right_foot/faked", 1000, this);
   return true;
@@ -71,8 +75,8 @@ void FakeFTSensor::process()
   KDL::ChainIdSolver_RNE leftDynamics(leftLegChain, grav);
   KDL::ChainIdSolver_RNE rightDynamics(rightLegChain, grav);
 
-  int right_error = rightDynamics.CartToJnt(trunk(position_, 0, 6), trunk(velocity_, 0, 6), trunk(acceleration_, 0, 6), force_, torques_right_);
-  int left_error = leftDynamics.CartToJnt(trunk(position_, 6, 12), trunk(velocity_, 6, 12), trunk(acceleration_, 6, 12), force_, torques_left_);
+  int right_error = rightDynamics.CartToJnt(trunk(position_, 0, joint_names_.size()/2), trunk(velocity_, 0, joint_names_.size()/2), trunk(acceleration_, 0, joint_names_.size()/2), force_, torques_right_);
+  int left_error = leftDynamics.CartToJnt(trunk(position_, joint_names_.size()/2, joint_names_.size()), trunk(velocity_, joint_names_.size()/2, joint_names_.size()), trunk(acceleration_, joint_names_.size()/2, joint_names_.size()), force_, torques_left_);
 
   if(right_error != 0)
     ROS_ERROR_THROTTLE(1.0, "Dynamics calculation in the right leg failed with error code %d", right_error);
@@ -83,20 +87,25 @@ void FakeFTSensor::process()
   {
     geometry_msgs::WrenchStamped rightFTValue;
     rightFTValue.header.stamp = ros::Time::now();
-    rightFTValue.header.frame_id = "pelvis_link";
-    rightFTValue.wrench.torque.x = torques_right_(5);
-    rightFTValue.wrench.torque.y = 0;
-    rightFTValue.wrench.torque.z = 0;
+    rightFTValue.header.frame_id = "r_foot_ft_link";
+    rightFTValue.wrench.torque.x = torques_right_(5) + right_ft_value_.torque(0);
+    rightFTValue.wrench.torque.y = right_ft_value_.torque(1);
+    rightFTValue.wrench.torque.z = right_ft_value_.torque(2);
+    rightFTValue.wrench.force.x = right_ft_value_.force(0);
+    rightFTValue.wrench.force.y = right_ft_value_.force(1);
+    rightFTValue.wrench.force.z = right_ft_value_.force(2);
     rightFTSensorPub_.publish(rightFTValue);
   }
   if(left_error == 0)
   {
     geometry_msgs::WrenchStamped leftFTValue;
     leftFTValue.header.stamp = ros::Time::now();
-    leftFTValue.header.frame_id = "pelvis_link";
-    leftFTValue.wrench.torque.x = torques_left_(5);
-    leftFTValue.wrench.torque.y = 0;
-    leftFTValue.wrench.torque.z = 0;
+    leftFTValue.wrench.torque.x = torques_right_(5) + right_ft_value_.torque(0);
+    leftFTValue.wrench.torque.y = right_ft_value_.torque(1);
+    leftFTValue.wrench.torque.z = right_ft_value_.torque(2);
+    leftFTValue.wrench.force.x = right_ft_value_.force(0);
+    leftFTValue.wrench.force.y = right_ft_value_.force(1);
+    leftFTValue.wrench.force.z = right_ft_value_.force(2);
     leftFTSensorPub_.publish(leftFTValue);
   }
 
@@ -128,6 +137,20 @@ void FakeFTSensor::jointStateCallback(const sensor_msgs::JointState::ConstPtr& j
       acceleration_(i) = joint_states->effort[std::distance(joint_states->name.begin(), it)];
     }
   }
+}
+
+void FakeFTSensor::leftFTSensorCallback(const geometry_msgs::WrenchStamped::ConstPtr &leftFTValues)
+{
+  KDL::Wrench newVal(KDL::Vector(leftFTValues->wrench.force.x, leftFTValues->wrench.force.y, leftFTValues->wrench.force.z),
+                     KDL::Vector(leftFTValues->wrench.torque.x, leftFTValues->wrench.torque.y, leftFTValues->wrench.torque.z));
+  left_ft_value_ = newVal;
+}
+
+void FakeFTSensor::rightFTSensorCallback(const geometry_msgs::WrenchStamped::ConstPtr &rightFTValues)
+{
+  KDL::Wrench newVal(KDL::Vector(rightFTValues->wrench.force.x, rightFTValues->wrench.force.y, rightFTValues->wrench.force.z),
+                     KDL::Vector(rightFTValues->wrench.torque.x, rightFTValues->wrench.torque.y, rightFTValues->wrench.torque.z));
+  right_ft_value_ = newVal;
 }
 
 KDL::JntArray FakeFTSensor::trunk(KDL::JntArray generalJoints, int start, int end)
