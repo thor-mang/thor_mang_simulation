@@ -72,7 +72,6 @@
         <arg name="robot_name" value="$(arg robot_name)" />
       </include>
     </group>
-
     <!-- run topic relays for topics published by gazebo to simulate real sensors -->
     <node name="imu_raw_relay" pkg="topic_tools" type="relay" args="/gazebo/$(arg robot_name)/sensor/imu /$(arg robot_name)/sensor/imu/raw" />
     <node name="imu_filtered_relay" pkg="topic_tools" type="relay" args="/gazebo/$(arg robot_name)/sensor/imu /$(arg robot_name)/sensor/imu/filtered" />
@@ -96,4 +95,8 @@
     <!-- robot spawner -->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model $(arg robot_name) -z 0.9 -param robot_description" />
   </group>
+
+  <!-- misc -->
+  <node pkg="tf" type="static_transform_publisher" name="lidar_to_head" args=" 0 0 0 0 0 0 head_link_hokuyo_laser_frame johnny5/sensor/head_link_hokuyo_laser_frame 100" />
+  <node pkg="tf" type="static_transform_publisher" name="cam_to_head" args=" 0 0 0 0 0 0 head_cam_depth_optical_frame johnny5/sensor/head_cam/head_cam_depth_optical_frame 100" />
 </launch>
