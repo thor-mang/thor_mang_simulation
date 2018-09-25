@@ -55,25 +55,12 @@ public:
 
 protected:
   void jointStateCallback(const sensor_msgs::JointState::ConstPtr& joint_states);
-  void leftFTSensorCallback(const geometry_msgs::WrenchStamped::ConstPtr& leftFTValues);
-  void rightFTSensorCallback(const geometry_msgs::WrenchStamped::ConstPtr& rightFTValues);
-
-  KDL::JntArray trunk(KDL::JntArray generalJoints, int start, int end);
 
 private:
   KDL::Tree robot_;
   ros::NodeHandle nh_;
 
-  KDL::JntArray position_, velocity_, acceleration_;
-  KDL::Wrench left_ft_value_, right_ft_value_;
-  KDL::Wrenches force_;
-  KDL::JntArray torques_left_, torques_right_;
-
-  std::vector<std::string> joint_names_;
-
   ros::Subscriber jointStateSub_;
-  ros::Subscriber leftFTSensorDataSub_;
-  ros::Subscriber rightFTSensorDataSub_;
 
   ros::Publisher leftFTSensorPub_;
   ros::Publisher rightFTSensorPub_;
