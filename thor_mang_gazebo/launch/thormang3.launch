@@ -11,7 +11,8 @@
   <arg name="pinned" default="false" />
   <arg name="ground_truth" default="true" />
   <arg name="paused" default="true" />
-  <arg name="gazebo_gui" default="true" />
+  <arg name="gazebo_gui" default="false" />
+  <arg name="rviz" default="true" />
   
   <!-- start Gazebo -->
   <include file="$(find thor_mang_gazebo)/launch/gazebo.launch">
@@ -46,8 +47,19 @@
     </include>
   </group>
 
-  <!-- start onboard software -->
-  <include file="$(find thor_mang_onboard_launch)/launch/onboard_common.launch" if="$(arg start_onboard)">
-    <arg name="gazebo" value="true" />
-  </include>
+  <group if="$(arg rviz)">
+    <!-- start onboard software -->
+    <include file="$(find thor_mang_onboard_launch)/launch/onboard_common.launch" if="$(arg start_onboard)">
+      <arg name="gazebo" value="true" />
+    </include>
+
+    <!-- start rviz -->
+    <include file="$(find thor_mang_ui_launch)/launch/rviz.launch"  />
+
+    <!-- start supervisor -->
+    <include file="$(find thor_mang_ui_launch)/launch/supervisor.launch" />
+
+    <!-- start auto unpause script -->
+    <node name="unpause_gazebo" pkg="thor_mang_gazebo" type="unpause_gazebo.sh" args="$(arg robot_name)" output="screen" />
+  </group>
 </launch>
