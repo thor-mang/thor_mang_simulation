@@ -83,16 +83,16 @@
     <group if="$(arg ground_truth)" >
       <node name="pelvis_odom_to_tf" pkg="message_to_tf" type="message_to_tf">
         <param name="odometry_topic" type="string" value="/gazebo/$(arg robot_name)/pelvis_odom" />
-        <param name="child_frame_id" type="string" value="pelvis_link" />
+        <param name="child_frame_id" type="string" value="base_link" />
         <param name="frame_id" type="string" value="odom" />
       </node>
 
-      <node pkg="tf" type="static_transform_publisher" name="world_odom_tf_static_publisher" args="0 0 0 0 0 0 1 world odom 100" />
+      <node name="world_odom_tf_static_publisher" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 world odom 100" />
     </group>
 
     <!-- misc -->
-    <node pkg="tf" type="static_transform_publisher" name="lidar_to_head" args=" 0 0 0 0 0 0 head_link_hokuyo_laser_frame johnny5/sensor/head_link_hokuyo_laser_frame 100" />
-    <node pkg="tf" type="static_transform_publisher" name="cam_to_head" args=" 0 0 0 0 0 0 head_cam_depth_optical_frame johnny5/sensor/head_cam/head_cam_depth_optical_frame 100" />
+    <node name="lidar_to_head" pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 head_link_hokuyo_laser_frame johnny5/sensor/head_link_hokuyo_laser_frame 100" />
+    <node name="cam_to_head" pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 head_cam_depth_optical_frame johnny5/sensor/head_cam/head_cam_depth_optical_frame 100" />
   </group>
 
   <group ns="$(arg robot_name)">
