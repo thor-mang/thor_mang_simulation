@@ -6,7 +6,7 @@
   <arg name="r_hand_type" default="$(optenv R_HAND_TYPE none)" />
   <arg name="position_controller" default="true" />
 
-  <arg name="world_name" default="$(find thor_mang_gazebo)/worlds/empty.world" />
+  <arg name="world_name" default="worlds/empty.world" />
   <arg name="pinned" default="false" />
   <arg name="ground_truth" default="true" />
   <arg name="paused" default="true" />
