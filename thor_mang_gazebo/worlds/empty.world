@@ -12,6 +12,28 @@
       <uri>model://sun</uri>
     </include>
 
+    <model name="box">
+      <static>true</static>
+
+      <pose>1.0 0 0.0 0 -0.2 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1 0.5 .1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1 0.5 .1</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
     <!-- Focus camera on tall pendulum -->
     <gui fullscreen='0'>
       <camera name='user_camera'>
