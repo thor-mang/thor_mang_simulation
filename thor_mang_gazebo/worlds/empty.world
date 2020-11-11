@@ -42,7 +42,7 @@
       </camera>
     </gui>
 	<!-- Slope in front of Robot -->
-    <model name="box">
+    <!--<model name="box">
       <static>true</static>
 
       <pose>1.0 0 0 0 -0.1 0</pose>
@@ -62,7 +62,7 @@
           </geometry>
         </visual>
       </link>
-    </model>
+    </model>-->
 	
 	<!-- Stairs in front of Robot -->
 	<!-- <model name="box">
